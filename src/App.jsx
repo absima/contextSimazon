@@ -18,7 +18,6 @@ export const browserRouter = createBrowserRouter([
     element: <AuthLayout />,
     children: [
       { path: '/', element: <HomePage /> },
-      { path: '/check', element: <Check /> },
       { path: '/home', element: <HomePart /> },
       { path: '/product/:id', element: <ProductPart /> },
       { path: '/cart/:id', element: <CartPart /> },
