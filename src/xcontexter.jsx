@@ -6,7 +6,7 @@ import { useLocalalStorage } from './auth/useLocalStorage';
 // import { useSearchParams } from "react-router-dom";
 
 const CtxtProvider = (props) => {
-  const [customer, setCustomer] = useState(['ab']);
+  const [customer, setCustomer] = useState(['']);
   const [loading1, setLoading1] = useState(false);
   const [error1, setError1] = useState(false);
   const [cart1, setCart1] = useState([2]);

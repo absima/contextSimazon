@@ -4,13 +4,18 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectUser } from '../redux/userSlice';
 import { selectCart } from '../redux/productSlice';
 import { getUserProfile } from '../redux/userSlice';
+import { Link } from 'react-router-dom';
+import { useContext } from 'react';
+import { ProjContext } from '../xcontexter';
 
 const ProfilePage = () => {
-  const params = useParams();
-  const dispatch = useDispatch();
-  const user = useSelector(selectUser);
+  const { customer } = useContext(ProjContext);
+
+  // const params = useParams();
+  // const dispatch = useDispatch();
+  // const user = useSelector(selectUser);
   const cart = useSelector(selectCart);
-  console.log('params', params);
+  // console.log('params', params);
   // useEffect(() => {
   //   dispatch(getUserProfile(params.username));
   // }, [dispatch, params.username]);
@@ -26,7 +31,7 @@ const ProfilePage = () => {
               fontWeight: 'bold',
             }}
           >
-            Welcome back, {params.username}!
+            Welcome back, {customer}!
           </h1>
 
           <p
@@ -52,23 +57,11 @@ const ProfilePage = () => {
               <ol>
                 {cart.map((item) => (
                   <li key={item._id}>
-                    <div>
-                    Name: {item.title} 
-                    </div>
-                    <div>
-                    Description: {item.description} 
-                    </div>
-                    <div>
-                    Quantity: x {item.num? item.num : 1}
-                    </div>
-                    <div>
-                    Price per piece: ${item.price}
-                    </div>
-                    <div>
-                    Subtotal price: ${item.num * item.price}
-                    </div>
-
-                    
+                    <div>Name: {item.title}</div>
+                    <div>Description: {item.description}</div>
+                    <div>Quantity: x {item.num ? item.num : 1}</div>
+                    <div>Price per piece: ${item.price}</div>
+                    <div>Subtotal price: ${item.num * item.price}</div>
                   </li>
                 ))}
               </ol>
@@ -107,7 +100,11 @@ const ProfilePage = () => {
                 fontWeight: 'bold',
               }}
             >
-              Your cart is empty
+              Your cart is empty, go{' '} 
+              <Link
+              to={`/home`}> 
+              shopping
+              </Link> 
             </p>
           )}
         </div>

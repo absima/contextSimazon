@@ -24,20 +24,14 @@ export default function SignInOrSignUpPart({ flag }) {
   // const user = useSelector(selectUser);
   // console.log('-------user------', user);
   // const error = useSelector(selectError);
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   //
   const {
     flagg,
     setFlagg,
     customer,
-    loading1,
     error1,
     setCustomer,
-    // signingup,
-    logout,
-    token,
-    cart1,
-    setCart1,
     setToken,
     setError1,
   } = useContext(ProjContext);
@@ -116,6 +110,9 @@ export default function SignInOrSignUpPart({ flag }) {
 
   // login part
   const signingin = async (username, password) => {
+    console.log('zzzzzzzzzzzzzzzzz');
+    console.log('username', username);
+    console.log('password', password);
     // try catch
     try {
       const res = await fetch('http://localhost:5050/user/login', {
@@ -155,11 +152,22 @@ export default function SignInOrSignUpPart({ flag }) {
   const handleSubmitLogin = (e) => {
     // prevent the form from refreshing the whole page
     e.preventDefault();
+
     signingin(username, password);
-    if (!error1) {
-      window.location.href = `/profile/${customer}`;
-      // navigate(`/profile/${customer}`);
+    if (!error1 && customer) {
+      const to = `/profile/${customer}`;
+      console.log(to);
+      navigate(to, { replace: true });
+      // window.location.href = `/profile/${customer}`;
+      // // navigate(`/profile/${customer}`);
     }
+  };
+
+  // logout submit handler
+  const handleLogout = async (e) => {
+    e.preventDefault();
+    logout();
+    return () => navigate('/login', { replace: true });
   };
 
   // handle name change
@@ -180,6 +188,7 @@ export default function SignInOrSignUpPart({ flag }) {
 
   // handle username change
   const handleUsernameChange = (e) => {
+    console.log('------>>>>>>>>>>>>username change', e.target.value);
     const username = e.target.value;
     setUsername(username);
     if (!validateName(username)) {
@@ -252,6 +261,7 @@ export default function SignInOrSignUpPart({ flag }) {
   ]);
 
   console.log('---------nameError--------', nameError);
+  console.log('customer', customer);
   // return with form validator functionallity
   return (
     <div className="container main-div">
@@ -406,23 +416,25 @@ export default function SignInOrSignUpPart({ flag }) {
               New customer? <Link to={`/register`}>Create your account</Link>
             </div>
           </div>
+          {(!error1 && customer) ? navigate(`/profile/${customer}`, { replace: true }) : null} 
         </form>
-      ): 
-      // flag == 'loggedin' ? (
-      //   <div>
-      //     <h1>Logged in</h1>
-      //   </div>
-      // ) : flag == 'registerd' ? (
-      //   <div>
-      //     <h1>Registered</h1>
-      //   </div>
-      // ) 
-      // : 
-      
-      (
-        <div>
-          <h1>Invalid</h1>
-        </div>
+        
+      ) : (
+        <Form className="form" onSubmit={handleLogout}>
+          <div>
+            <h1>Sign Out</h1>
+          </div>
+          <div>
+            {loading && <LoadingIndicator></LoadingIndicator>}
+            {error1 && <Message variant="danger">{error1}</Message>}
+          </div>
+          <div>
+            <label />
+            <button className="buttoncolor" type="submit">
+              Log out
+            </button>
+          </div>
+        </Form>
       )}
     </div>
   );

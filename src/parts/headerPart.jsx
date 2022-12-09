@@ -15,24 +15,17 @@ import { ProjContext } from '../xcontexter';
 export default function HeaderPart() {
   const {
     customer,
-    loading1,
     error1,
     setCustomer,
-    // signingup,
-    logout,
     token,
-    cart1,
-    setCart1,
-    setToken,
-    setError1,
   } = useContext(ProjContext);
+  
 
-  console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
+  console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
   console.log('token', token);
   console.log('customer', customer);
   console.log('error1', error1);
-  console.log('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
-
+  console.log('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyy');
 
   // const dispatch = useDispatch();
   // const user = useSelector(selectUser);
@@ -43,13 +36,11 @@ export default function HeaderPart() {
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState('');
   const [open, setOpen] = useState(false);
-  
-
 
   const cartItems =
     cart.length > 0 ? cart.reduce((a, item) => a + item.num, 0) : 0;
 
-  // 
+  //
   const handleLogout = () => {
     localStorage.removeItem('userInfo');
     localStorage.removeItem('cartItems');
@@ -209,7 +200,7 @@ export default function HeaderPart() {
 
           <Col xs={12} md={2}>
             <div className="headerdiv">
-              {customer? (
+              {customer ? (
                 <div className="dropdown">
                   <Link to="/#">
                     {customer} <i className="fa fa-caret-down"></i>
