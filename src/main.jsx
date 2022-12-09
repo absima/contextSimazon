@@ -14,10 +14,11 @@ import CtxtProvider from './xcontexter';
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={store}>
     <CtxtProvider>
-      <RouterProvider router={browserRouter}>
-        <Snowfall /> 
+      <RouterProvider router={browserRouter}/>
+        <Snowfall> 
         <App />
-      </RouterProvider>
+        </Snowfall>
+      {/* </RouterProvider> */}
     </CtxtProvider>
   </Provider>
 );
