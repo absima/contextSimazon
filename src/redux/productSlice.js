@@ -115,7 +115,6 @@ export const addNremove = (id, qty, flag) => async (dispatch, getState) => {
     try {
       dispatch(addToCartRequest());
       const data = await productApi.getOneProduct(id);
-      console.log('add -- addNremove data slice', data);
       data.num = qty;
       dispatch(addToCartSuccess({ ...data }));
       localStorage.setItem(
@@ -129,7 +128,6 @@ export const addNremove = (id, qty, flag) => async (dispatch, getState) => {
     try {
       dispatch(deleteFromCartRequest());
       const data = await productApi.getOneProduct(id);
-      console.log('remove -- addNremove data slice', data);
       data.num = qty;
       dispatch(deleteFromCartSuccess({ ...data }));
       localStorage.setItem(

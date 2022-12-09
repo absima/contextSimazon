@@ -11,13 +11,11 @@ export const getProducts = (type) =>
   axios
     .get(import.meta.env.VITE_API_URL + `item`)
     .then((res) => {
-      console.log('a');
-      console.log(res);
+     
       return res.data;
     })
     .catch((error) => {
-      console.log('b');
-      console.error(error)
+      
       return []
     });
 

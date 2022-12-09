@@ -39,16 +39,13 @@ const Check = () => {
 
     axios(configuration)
       .then((result) => {
-        console.log(result);
         setCustomer(username);
       })
       .catch((error) => {
-        console.log(error);
         setSuccessful(false);
       });
   };
 
-  console.log('successful', successful);
 
   // login part
   const signingin = async (username, password) => {
@@ -67,22 +64,16 @@ const Check = () => {
       });
       const token = await res.json();
 
-      console.log('sigining in ', token);
       setToken(token);
       setCustomer(username);
       // setSuccessful(true);
     } catch (err) {
-      console.log(err);
       setToken(null);
       // setSuccessful(false);
     }
   };
 
-  // signup('james Avery', 'james2', 'james2@avery.com', 'Password1');
-  // signingin('simameng', 'Password1');
-  // signingup('james Avery', 'james1', 'james1@avery.com', 'Password1');
-  // signingup(username, password);
-  // console.log(token)
+  
   return (
     <div className="container maindiv">
       <div className="registered-page__container">

@@ -1,24 +1,16 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectUser } from '../redux/userSlice';
+// import { selectUser } from '../redux/userSlice';
 import { selectCart } from '../redux/productSlice';
-import { getUserProfile } from '../redux/userSlice';
+// import { getUserProfile } from '../redux/userSlice';
 import { Link } from 'react-router-dom';
 import { useContext } from 'react';
 import { ProjContext } from '../xcontexter';
 
 const ProfilePage = () => {
   const { customer } = useContext(ProjContext);
-
-  // const params = useParams();
-  // const dispatch = useDispatch();
-  // const user = useSelector(selectUser);
   const cart = useSelector(selectCart);
-  // console.log('params', params);
-  // useEffect(() => {
-  //   dispatch(getUserProfile(params.username));
-  // }, [dispatch, params.username]);
 
   return (
     <div className="container, maindiv">
@@ -100,11 +92,7 @@ const ProfilePage = () => {
                 fontWeight: 'bold',
               }}
             >
-              Your cart is empty, go{' '} 
-              <Link
-              to={`/home`}> 
-              shopping
-              </Link> 
+              Your cart is empty, go <Link to={`/home`}>shopping</Link>
             </p>
           )}
         </div>

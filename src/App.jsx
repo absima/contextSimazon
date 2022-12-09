@@ -9,7 +9,7 @@ import RegisteredPage from './parts/registeredPage';
 import LoggedInPart from './parts/loggedInPage';
 import AuthLayout from './parts/layout';
 import SearchPart from './parts/searchPart';
-
+import { useNavigate } from 'react-router-dom';
 import Check from './parts/userinput';
 
 export const browserRouter = createBrowserRouter([
@@ -35,6 +35,7 @@ export const browserRouter = createBrowserRouter([
 ]);
 
 export default function App() {
+  const navigate = useNavigate();
   return (
     <div>
       <h1>Welcome back</h1>
@@ -89,18 +90,21 @@ export default function App() {
 // import FooterPart from './parts/footerPart';
 // import RegisteredPage from './parts/registeredPage';
 // import LoggedInPart from './parts/loggedInPage';
+// import SearchPart from './parts/searchPart';
 
 // function App() {
 //   return (
 //     <div
 //     // className="App"
 //     >
-//       {/* <header>
+//       <header>
 //         <HeaderPart />
 //       </header>
-//       {/* <main>
+//        <main>
 //         <Routes>
-//           <Route path="/" element={<HomePart />} />
+//           <Route path="/" element={<HomePage />} />
+//           <Route path="/home" element={<HomePart />} />
+
 //           <Route path="/product/:id" element={<ProductPart />} />
 //           <Route path="/cart/:id" element={<CartPart />} />
 //           <Route path="/cart" element={<CartPart />} />
@@ -111,15 +115,15 @@ export default function App() {
 //           />
 //           <Route path="/registered" element={<RegisteredPage />} />
 //           <Route path="/loggedin" element={<LoggedInPart />} />
-//           <Route path="/profile" element={<ProfilePage />} />
+//           <Route path="/profile/:username" element={<LoggedInPart />} />
 //           <Route path="/category/:id" element={<HomePage />} />
-//           <Route path="/search" element={<HomePage />} />
+//           <Route path="/:search" element={<SearchPart />} />
 //           <Route path="*" element={<h1>Not Found</h1>} />
 //         </Routes>
-//       </main> */}
-//       {/* <footer className="row center">
+//       </main>
+//       <footer className="row center">
 //         <FooterPart />
-//       </footer> */}
+//       </footer>
 //     </div>
 //   );
 // }

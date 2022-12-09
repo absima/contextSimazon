@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, redirect } from 'react-router-dom';
 import axios from 'axios';
 
 import { Row, Col, Form, Button } from 'react-bootstrap';
@@ -10,20 +10,13 @@ import Message from '../components/message';
 //
 import { useContext } from 'react';
 import { ProjContext } from '../xcontexter';
-//
-// import {
-//   selectUser,
-//   selectError,
-//   registerUser,
-//   loginUser,
-//   logoutUser,
-// } from '../redux/userSlice';
 
 export default function SignInOrSignUpPart({ flag }) {
   // const dispatch = useDispatch();
   // const user = useSelector(selectUser);
   // console.log('-------user------', user);
   // const error = useSelector(selectError);
+
   const navigate = useNavigate();
   //
   const {
@@ -59,7 +52,7 @@ export default function SignInOrSignUpPart({ flag }) {
   const [formValid, setFormValid] = useState(false);
   const [successful, setSuccessful] = useState(false);
 
-  console.log('flag', flag);
+  setFlagg(flag);
 
   const validateEmail = (email) => {
     const re =
@@ -75,6 +68,11 @@ export default function SignInOrSignUpPart({ flag }) {
   const validateName = (name) => {
     const re = /^[a-zA-Z ]{2,30}$/;
     return re.test(String(name));
+  };
+
+  const validateUserName = (username) => {
+    const re = /^[a-zA-Z ]{5,30}$/;
+    return re.test(String(username));
   };
 
   const validateConfirmPassword = (password, confirmPassword) => {
@@ -98,7 +96,6 @@ export default function SignInOrSignUpPart({ flag }) {
 
     axios(configuration)
       .then((result) => {
-        console.log(result);
         setCustomer(username);
         setError1(false);
       })
@@ -110,9 +107,9 @@ export default function SignInOrSignUpPart({ flag }) {
 
   // login part
   const signingin = async (username, password) => {
-    console.log('zzzzzzzzzzzzzzzzz');
-    console.log('username', username);
-    console.log('password', password);
+    // console.log('zzzzzzzzzzzzzzzzz');
+    // console.log('username', username);
+    // console.log('password', password);
     // try catch
     try {
       const res = await fetch('http://localhost:5050/user/login', {
@@ -136,7 +133,6 @@ export default function SignInOrSignUpPart({ flag }) {
       // setError1(false);
       // setSuccessful(true);
     } catch (err) {
-      console.log(err);
       setToken(null);
       setError1(true);
       // setSuccessful(false);
@@ -154,13 +150,13 @@ export default function SignInOrSignUpPart({ flag }) {
     e.preventDefault();
 
     signingin(username, password);
-    if (!error1 && customer) {
-      const to = `/profile/${customer}`;
-      console.log(to);
-      navigate(to, { replace: true });
-      // window.location.href = `/profile/${customer}`;
-      // // navigate(`/profile/${customer}`);
-    }
+    // if (!error1 && customer) {
+    //   const to = `/profile/${customer}`;
+    //   console.log(to);
+    //   navigate(to, { replace: true });
+    //   // window.location.href = `/profile/${customer}`;
+    //   // // navigate(`/profile/${customer}`);
+    // }
   };
 
   // logout submit handler
@@ -173,7 +169,6 @@ export default function SignInOrSignUpPart({ flag }) {
   // handle name change
   const handleNameChange = (e) => {
     const name = e.target.value;
-    console.log('name validator', validateName(name));
     setName(name);
     if (!validateName(name)) {
       setNameError(
@@ -188,12 +183,12 @@ export default function SignInOrSignUpPart({ flag }) {
 
   // handle username change
   const handleUsernameChange = (e) => {
-    console.log('------>>>>>>>>>>>>username change', e.target.value);
+    // console.log('------>>>>>>>>>>>>username change', e.target.value);
     const username = e.target.value;
     setUsername(username);
-    if (!validateName(username)) {
+    if (!validateUserName(username)) {
       setUsernameError(
-        'Username must be at least 2 characters long and contain only letters'
+        'Username must be at least 5 characters long and contain only letters'
       );
       setUsernameValid(false);
     } else {
@@ -240,6 +235,11 @@ export default function SignInOrSignUpPart({ flag }) {
     }
   };
 
+  const regredirect = () => {
+    navigate('/registered', { replace: true });
+    setFlagg('login');
+  };
+
   useEffect(() => {
     if (
       nameValid &&
@@ -260,12 +260,26 @@ export default function SignInOrSignUpPart({ flag }) {
     confirmPasswordValid,
   ]);
 
-  console.log('---------nameError--------', nameError);
-  console.log('customer', customer);
+  // useEffect for navigation to profile page
+  useEffect(() => {
+    !error1 && customer
+      ? flagg == 'login'
+        ? navigate(`/profile/${customer}`, { replace: true })
+        : navigate(`/registered`, { replace: true })
+      : console.log('error1', error1);
+  }, [error1, customer]);
+
+  // // useEffect for navigation to just registered user
+  // useEffect(() => {
+  //   if (!error1 && customer && flagg == 'register') {
+  //     const to = `/registered/${customer}`;
+  //   }
+  // }, [error1, customer]);
+
   // return with form validator functionallity
   return (
     <div className="container main-div">
-      {flag == 'register' ? (
+      {flagg == 'register' ? (
         <form className="form" noValidate onSubmit={handleSubmitRegister}>
           <div>
             <h1>Register</h1>
@@ -367,9 +381,13 @@ export default function SignInOrSignUpPart({ flag }) {
               Already have an account? <Link to={`/login`}>Sign In</Link>
             </div>
           </div>
-          {register ? navigate('/registered', { replace: true }) : null}
+          {
+            // error1 ? navigate('/registered', { replace: true }) : null
+            // // setFlagg('login');
+            // // !error1 ? regredirect() : null
+          }
         </form>
-      ) : flag == 'login' ? (
+      ) : flagg == 'login' ? (
         <form className="form" noValidate onSubmit={handleSubmitLogin}>
           <div>
             <h1>Login</h1>
@@ -416,9 +434,10 @@ export default function SignInOrSignUpPart({ flag }) {
               New customer? <Link to={`/register`}>Create your account</Link>
             </div>
           </div>
-          {(!error1 && customer) ? navigate(`/profile/${customer}`, { replace: true }) : null} 
+          {/* {!error1 && customer
+            ? navigate(`/profile/${customer}`, { replace: true })
+            : null} */}
         </form>
-        
       ) : (
         <Form className="form" onSubmit={handleLogout}>
           <div>

@@ -5,7 +5,7 @@ import { faCartShopping, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { Form, Link, useSearchParams, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCart } from '../redux/productSlice';
-import { logoutUser, selectUser } from '../redux/userSlice';
+// import { logoutUser, selectUser } from '../redux/userSlice';
 
 import { useContext } from 'react';
 import { ProjContext } from '../xcontexter';
@@ -14,6 +14,7 @@ import { ProjContext } from '../xcontexter';
 
 export default function HeaderPart() {
   const {
+    flagg,
     customer,
     error1,
     setCustomer,
@@ -107,7 +108,7 @@ export default function HeaderPart() {
             <select
               className="selectCategory"
               name="category"
-              value="ab"
+              value=""
               // value={filter}
               // value = {searchParams.get("filter") || ""}
               onChange={handleSelect}
@@ -200,14 +201,14 @@ export default function HeaderPart() {
 
           <Col xs={12} md={2}>
             <div className="headerdiv">
-              {customer ? (
+              {(customer && flagg=='login')? (
                 <div className="dropdown">
                   <Link to="/#">
                     {customer} <i className="fa fa-caret-down"></i>
                   </Link>
                   <ul className="dropdown-content">
                     <li>
-                      <Link to="/#">Profile</Link>
+                      <Link to={`/profile/${customer}`} > Profile </Link>
                     </li>
                     <li>
                       <Link to="/#">Orders</Link>

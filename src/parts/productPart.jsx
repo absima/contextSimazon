@@ -28,7 +28,7 @@ export default function ProductPart() {
 
   let loading = useSelector(selectLoading);
   if (Object.keys(product).length === 0) {
-    // console.log('condition', product)
+   
     // return "";
     loading = true;
   }
