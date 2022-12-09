@@ -65,6 +65,7 @@ ul {
 li {
   margin-top: 1rem;
 }
+.input1,
 input,
 select,
 textarea,
@@ -81,6 +82,7 @@ button {
   background-color: #f8f8f8;
   cursor: pointer;
 }
+.input1,
 input:hover,
 select:hover,
 textarea:hover,
@@ -116,6 +118,9 @@ a.brand {
   justify-content: space-around;
   align-items: center;
   padding-bottom: 1rem;
+}
+.error{
+  color: rgb(234, 75, 18);
 }
 .brand{
   height: 5rem 

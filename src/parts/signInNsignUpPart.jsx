@@ -1,35 +1,54 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { useAuth } from '../auth/useAuth';
 
-import { useDispatch, useSelector, ReactReduxContext } from 'react-redux';
-import { useNavigate, Form } from 'react-router-dom';
+import { Row, Col, Form, Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import LoadingIndicator from '../components/loading';
 import Message from '../components/message';
-import {
-  selectUser,
-  selectError,
-  registerUser,
-  loginUser,
-  logoutUser,
-} from '../redux/userSlice';
+
+//
+import { useContext } from 'react';
+import { ProjContext } from '../xcontexter';
+//
+// import {
+//   selectUser,
+//   selectError,
+//   registerUser,
+//   loginUser,
+//   logoutUser,
+// } from '../redux/userSlice';
 
 export default function SignInOrSignUpPart({ flag }) {
-  const dispatch = useDispatch();
-  const user = useSelector(selectUser);
-  console.log('-------user------', user);
-  const error = useSelector(selectError);
-  const navigate = useNavigate();
+  // const dispatch = useDispatch();
+  // const user = useSelector(selectUser);
+  // console.log('-------user------', user);
+  // const error = useSelector(selectError);
+  // const navigate = useNavigate();
   //
+  const {
+    flagg,
+    setFlagg,
+    customer,
+    loading1,
+    error1,
+    setCustomer,
+    // signingup,
+    logout,
+    token,
+    cart1,
+    setCart1,
+    setToken,
+    setError1,
+  } = useContext(ProjContext);
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [register, setRegister] = useState('');
 
-  const { login } = useAuth();
+  const [register, setRegister] = useState('');
 
   const [nameError, setNameError] = useState('');
   const [usernameError, setUsernameError] = useState('');
@@ -46,12 +65,7 @@ export default function SignInOrSignUpPart({ flag }) {
   const [formValid, setFormValid] = useState(false);
   const [successful, setSuccessful] = useState(false);
 
-  console.log('user', user);
   console.log('flag', flag);
-  console.log('successful', successful);
-
-  const em = 'sima@meng.com';
-  const pw = 'Password1';
 
   const validateEmail = (email) => {
     const re =
@@ -73,8 +87,85 @@ export default function SignInOrSignUpPart({ flag }) {
     return password === confirmPassword;
   };
 
+  // signup part
+  const signingup = (name, username, email, password) => {
+    const configuration = {
+      method: 'post',
+      url: 'http://localhost:5050/user/register',
+      data: {
+        name,
+        username,
+        email,
+        password,
+      },
+    };
+
+    // make the API call
+
+    axios(configuration)
+      .then((result) => {
+        console.log(result);
+        setCustomer(username);
+        setError1(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setError1(true);
+      });
+  };
+
+  // login part
+  const signingin = async (username, password) => {
+    // try catch
+    try {
+      const res = await fetch('http://localhost:5050/user/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: username,
+          password: password,
+        }),
+        mode: 'cors',
+      });
+      const token = await res.json();
+
+      // console.log('sigining in ', token);
+      setToken(token);
+      setCustomer(username);
+      token.error ? setError1(true) : setError1(false);
+
+      // setError1(false);
+      // setSuccessful(true);
+    } catch (err) {
+      console.log(err);
+      setToken(null);
+      setError1(true);
+      // setSuccessful(false);
+    }
+  };
+
+  const handleSubmitRegister = (e) => {
+    // prevent the form from refreshing the whole page
+    e.preventDefault();
+    signingup(name, username, email, password);
+  };
+
+  const handleSubmitLogin = (e) => {
+    // prevent the form from refreshing the whole page
+    e.preventDefault();
+    signingin(username, password);
+    if (!error1) {
+      window.location.href = `/profile/${customer}`;
+      // navigate(`/profile/${customer}`);
+    }
+  };
+
+  // handle name change
   const handleNameChange = (e) => {
     const name = e.target.value;
+    console.log('name validator', validateName(name));
     setName(name);
     if (!validateName(name)) {
       setNameError(
@@ -140,242 +231,126 @@ export default function SignInOrSignUpPart({ flag }) {
     }
   };
 
-  // // submit handler for register
-  // const registerSubmitHandler = (e) => {
-  //   e.preventDefault();
-  //   if (nameValid && usernameValid && emailValid && passwordValid) {
-  //     dispatch(
-  //       registerUser(name, username, email, password, confirmPassword)
-  //     ).then((res) => {
-  //       console.log('response ------', res);
-  //       setSuccessful(true);
-  //     });
-  //   }
-  // };
-
-  const handleSubmitRegister = (e) => {
-    // prevent the form from refreshing the whole page
-    e.preventDefault();
-
-    // set configurations
-    const configuration = {
-      method: 'post',
-      url: 'http://localhost:5050/user/register',
-      data: {
-        name,
-        username,
-        email,
-        password,
-      },
-    };
-
-    // make the API call
-    axios(configuration)
-      .then((result) => {
-        setRegister(true);
-        console.log('register set to true in config', register);
-      })
-      .catch((error) => {
-        console.log('error here in registration');
-        error = new Error();
-      });
-  };
-
-  const submitHandler = (e) => {
-    e.preventDefault();
-    if (flag === 'login') {
-      dispatch(loginUser(username, password))
-        .then((res) => {
-          console.log('response ------', res);
-          setSuccessful(true);
-        })
-        .catch((res) => {
-          console.log(res);
-          setSuccessful(false);
-        });
-    } else {
-      dispatch(registerUser(name, username, email, password))
-        .then(() => {
-          setSuccessful(true);
-        })
-        .catch(() => {
-          setSuccessful(false);
-        });
-    }
-  };
-
-  // login submit handler
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const username = e.target[0].value;
-    const password = e.target[1].value;
-    // const formData = Object.fromEntries(new FormData(e.currentTarget));
-    // console.log('formmmmm dataaaaaa', formData);
-    const res = await fetch('http://localhost:5050/user/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username: username,
-        password: password,
-      }),
-      mode: 'cors',
-    });
-    const token = await res.json();
-
-    login(token, username);
-
-    const to = `/profile/${username}`;
-    console.log(to);
-    return () => navigate(to, { replace: true });
-  };
-
-  // logout submit handler
-  const handleLogout = async (e) => {
-    e.preventDefault();
-    logout();
-    return () => navigate('/login', { replace: true });
-  };
-
   useEffect(() => {
-    if (flag === 'login') {
-      if (emailValid && passwordValid) {
-        setFormValid(true);
-        dispatch(loginUser(email, password));
-        console.log('error---------------', error);
-      } else {
-        setFormValid(false);
-      }
+    if (
+      nameValid &&
+      usernameValid &&
+      emailValid &&
+      passwordValid &&
+      confirmPasswordValid
+    ) {
+      setFormValid(true);
     } else {
-      if (emailValid && passwordValid && nameValid && confirmPasswordValid) {
-        setFormValid(true);
-        dispatch(registerUser(name, email, password));
-      } else {
-        setFormValid(false);
-      }
+      setFormValid(false);
     }
-  }, [emailValid, passwordValid, nameValid, confirmPasswordValid]);
+  }, [
+    nameValid,
+    usernameValid,
+    emailValid,
+    passwordValid,
+    confirmPasswordValid,
+  ]);
 
-  useEffect(() => {
-    if (user) {
-      setEmail('');
-      setPassword('');
-      setName('');
-      setConfirmPassword('');
-    }
-  }, [user]);
-
+  console.log('---------nameError--------', nameError);
+  // return with form validator functionallity
   return (
-    <div className="container maindiv">
-      {flag === 'login' ? (
-        <Form
-          className="form"
-          onSubmit={
-            // submitHandler
-            handleSubmit
-          }
-        >
+    <div className="container main-div">
+      {flag == 'register' ? (
+        <form className="form" noValidate onSubmit={handleSubmitRegister}>
           <div>
-            <h1>Sign In</h1>
+            <h1>Register</h1>
           </div>
-          <div>{error && <Message variant="danger">{error}</Message>}</div>
-
-          <div>
-            <label htmlFor="name">username</label>
-            <input
-              type="username"
-              id="username"
-              placeholder="Enter username"
-              required
-              onChange={(e) => setUsername(e.target.value)}
-            ></input>
-          </div>
-          <div>
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              placeholder="Enter password"
-              required
-              onChange={(e) => setPassword(e.target.value)}
-            ></input>
-          </div>
-          <div>
-            <label />
-            <button className="buttoncolor" type="submit">
-              Sign In
-            </button>
-          </div>
-          <div>
-            <label />
-            <div>
-              New customer? <Link to={`/register`}>Create your account</Link>
-            </div>
-          </div>
-        </Form>
-      ) : flag === 'register' ? (
-        <Form className="form" onSubmit={handleSubmitRegister}>
-          <div>
-            <h1>Create Account</h1>
-          </div>
-          <div>{error && <Message variant="danger">{error}</Message>}</div>
-          <div>
+          <div>{error1 && <Message variant="danger">Retry</Message>}</div>
+          <div
+          // className="form-group"
+          >
             <label htmlFor="name">Name</label>
             <input
-              type="name"
-              id="name"
+              type="text"
+              // className="form-control"
+              name="name"
               placeholder="Enter name"
               required
-              onChange={(e) => setName(e.target.value)}
-            ></input>
+              value={name}
+              onChange={handleNameChange}
+            />
+            {nameError && <div className="error">{nameError}</div>}
           </div>
-          <div>
-            <label htmlFor="name">username</label>
+          <div
+          // className="form-group"
+          >
+            <label htmlFor="username">Username</label>
             <input
-              type="username"
-              id="username"
-              placeholder="Choose username"
-              required
-              onChange={(e) => setUsername(e.target.value)}
-            ></input>
+              type="text"
+              // className="form-control"
+              name="username"
+              placeholder="Enter username"
+              value={username}
+              onChange={handleUsernameChange}
+            />
+            {usernameError && <div className="error">{usernameError}</div>}
           </div>
-          <div>
-            <label htmlFor="email">Email address</label>
+          <div
+          // className="form-group"
+          >
+            <label htmlFor="email">Email Address</label>
             <input
               type="email"
-              id="email"
-              placeholder="Enter email"
-              required
-              onChange={(e) => setEmail(e.target.value)}
-            ></input>
+              // className="form-control"
+              name="email"
+              placeholder="Enter Email"
+              value={email}
+              onChange={handleEmailChange}
+            />
+            {emailError && <div className="error">{emailError}</div>}
           </div>
-          <div>
+          <div
+          // className="form-group"
+          >
             <label htmlFor="password">Password</label>
             <input
               type="password"
-              id="password"
-              placeholder="Choose password"
-              required
-              onChange={(e) => setPassword(e.target.value)}
-            ></input>
+              // className="form-control"
+              name="password"
+              placeholder="Enter Password"
+              value={password}
+              onChange={handlePasswordChange}
+            />
+            {passwordError && <div className="error">{passwordError}</div>}
           </div>
-          <div>
-            <label htmlFor="rePassword">Re-Enter Password</label>
+          <div
+          // className="form-group"
+          >
+            <label htmlFor="confirmPassword">Confirm Password</label>
             <input
               type="password"
-              id="rePassword"
-              placeholder="Re-Enter password"
-              required
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            ></input>
+              // className="form-control"
+              name="confirmPassword"
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChange={handleConfirmPasswordChange}
+            />
+            {confirmPasswordError && (
+              <div className="error">{confirmPasswordError}</div>
+            )}
           </div>
           <div>
-            <label />
-            <button className="buttoncolor" type="submit">
+            <button
+              type="submit"
+              className="buttoncolor" //"btn btn-lg btn-primary btn-block"
+              disabled={
+                !nameValid ||
+                !usernameValid ||
+                !emailValid ||
+                !passwordValid ||
+                !confirmPasswordValid
+              }
+            >
               Register
             </button>
           </div>
+          {error1 && <div className="error">Error registering</div>}
+          {successful && <div className="success">Registration successful</div>}
           <div>
             <label />
             <div>
@@ -383,24 +358,401 @@ export default function SignInOrSignUpPart({ flag }) {
             </div>
           </div>
           {register ? navigate('/registered', { replace: true }) : null}
-        </Form>
-      ) : (
-        <Form className="form" onSubmit={handleLogout}>
+        </form>
+      ) : flag == 'login' ? (
+        <form className="form" noValidate onSubmit={handleSubmitLogin}>
           <div>
-            <h1>Sign Out</h1>
+            <h1>Login</h1>
+          </div>
+          <div>{error1 && <Message variant="danger">Retry</Message>}</div>
+          <div>
+            <label htmlFor="username">Username</label>
+            <input
+              type="text"
+              // className="form-control"
+              name="username"
+              placeholder="Enter username"
+              value={username}
+              onChange={handleUsernameChange}
+            />
+            {usernameError && <div className="error">{usernameError}</div>}
           </div>
           <div>
-            {loading && <LoadingIndicator></LoadingIndicator>}
-            {error && <Message variant="danger">{error}</Message>}
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              // className="form-control"
+              name="password"
+              placeholder="Enter Password"
+              value={password}
+              onChange={handlePasswordChange}
+            />
+            {passwordError && <div className="error">{passwordError}</div>}
           </div>
           <div>
-            <label />
-            <button className="buttoncolor" type="submit">
-              Sign Out
+            <button
+              type="submit"
+              className="buttoncolor" //"btn btn-lg btn-primary btn-block"
+              disabled={!usernameValid || !passwordValid}
+            >
+              Log in
             </button>
           </div>
-        </Form>
+          {error1 && <div className="error">Error logging in</div>}
+          {successful && <div className="success">Login successful</div>}
+          <div>
+            <label />
+            <div>
+              New customer? <Link to={`/register`}>Create your account</Link>
+            </div>
+          </div>
+        </form>
+      ): 
+      // flag == 'loggedin' ? (
+      //   <div>
+      //     <h1>Logged in</h1>
+      //   </div>
+      // ) : flag == 'registerd' ? (
+      //   <div>
+      //     <h1>Registered</h1>
+      //   </div>
+      // ) 
+      // : 
+      
+      (
+        <div>
+          <h1>Invalid</h1>
+        </div>
       )}
     </div>
   );
+}
+
+{
+  /* 
+        </div>
+      </div>
+      <div className="row">
+        <div className="col-md-6 mt-5 mx-auto">
+          <form noValidate onSubmit={handleSubmitLogin}>
+            <h1 className="h3 mb-3 font-weight-normal">Login</h1>
+            <div className="form-group">
+              <label htmlFor="username">Username</label>
+              <input
+                type="text"
+                className="form-control"
+                name="username"
+                placeholder="Enter username"
+                value={username}
+                onChange={handleUsernameChange}
+              />
+              {usernameError && <div className="error">{usernameError}</div>}
+            </div>
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
+              <input
+                type="password"
+                className="form-control"
+                name="password"
+                placeholder="Enter Password"
+                value={password}
+                onChange={handlePasswordChange}
+              />
+              {passwordError && <div className="error">{passwordError}</div>}
+            </div>
+            <button
+              type="submit"
+              className="btn btn-lg btn-primary btn-block"
+              disabled={!usernameValid || !passwordValid}
+            >
+              Login
+            </button>
+            {error1 && <div className="error">Error logging in</div>}
+            {successful && <div className="success">Login successful</div>}
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+} */
+}
+
+//     <div className="container-div">
+//       {flag == 'login' ? (
+//         <Form className="form" onSubmit={handleSubmitLogin}>
+//           <div>
+//             <h1 >Log in</h1>
+//           </div>
+//           <div>
+//             {error1 && (
+//               <Message variant="danger">Invalid username or password</Message>
+//             )}
+//           </div>
+//           <div>
+//             <Form.Group controlId="username">
+//               <Form.Label>Username</Form.Label>
+//               <Form.Control
+//                 type="text"
+//                 placeholder="Enter username"
+//                 value={username}
+//                 onChange={handleUsernameChange}
+//               ></Form.Control>
+//               {usernameError && <div className="error">{usernameError}</div>}
+//             </Form.Group>
+//           </div>
+//           <div>
+//             <Form.Group controlId="password">
+//               <Form.Label>Password</Form.Label>
+//               <Form.Control
+//                 type="password"
+//                 placeholder="Enter password"
+//                 value={password}
+//                 onChange={(e) => setPassword(e.target.value)}
+//               ></Form.Control>
+//             </Form.Group>
+//           </div>
+//           <div>
+//             <Button type="submit" variant="primary">
+//               Log in
+//             </Button>
+//           </div>
+//           <div>
+//             <Row className="py-3">
+//               <Col>
+//                 New Customer? <Link to={`/register`}>Register</Link>
+//                 {/* <Link
+//                   to={redirect ? `/register?redirect=${redirect}` : '/register'}
+//                 >
+//                   Register
+//                 </Link> */}
+//               </Col>
+//             </Row>
+//           </div>
+//         </Form>
+//       ) : (
+//         <Form className="form" onSubmit={handleSubmitRegister}>
+//           <div>
+//             <h1 >Register</h1>
+//           </div>
+//           <div>
+//             {error1 && (
+//               <Message variant="danger">Invalid username or password</Message>
+//             )}
+//           </div>
+//           <div>
+//             <Form.Group controlId="name">
+//               <Form.Label>Name</Form.Label>
+//               <Form.Control
+//                 type="text"
+//                 placeholder="Enter name"
+//                 value={name}
+//                 onChange={handleNameChange}
+//               ></Form.Control>
+//               {nameError && <div className="error">{nameError}</div>}
+//             </Form.Group>
+//           </div>
+//           <div>
+//             <Form.Group controlId="username">
+//               <Form.Label>Username</Form.Label>
+//               <Form.Control
+//                 type="text"
+//                 placeholder="Enter username"
+//                 value={username}
+//                 onChange={handleUsernameChange}
+//               ></Form.Control>
+//               {usernameError && <div className="error">{usernameError}</div>}
+//             </Form.Group>
+//           </div>
+//           <div>
+//             <Form.Group controlId="email">
+//               <Form.Label>Email Address</Form.Label>
+//               <Form.Control
+//                 type="email"
+//                 placeholder="Enter email"
+//                 value={email}
+//                 onChange={handleEmailChange}
+//               ></Form.Control>
+//               {emailError && <div className="error">{emailError}</div>}
+//             </Form.Group>
+//           </div>
+//           <div>
+//             <Form.Group controlId="password">
+//               <Form.Label>Password</Form.Label>
+//               <Form.Control
+//                 type="password"
+//                 placeholder="Enter password"
+//                 value={password}
+//                 onChange={handlePasswordChange}
+//               ></Form.Control>
+//               {passwordError && <div className="error">{passwordError}</div>}
+//             </Form.Group>
+//           </div>
+//           <div>
+//             <Form.Group controlId="confirmPassword">
+//               <Form.Label>Confirm Password</Form.Label>
+//               <Form.Control
+//                 type="password"
+//                 placeholder="Confirm password"
+//                 value={confirmPassword}
+//                 onChange={handleConfirmPasswordChange}
+//               ></Form.Control>
+//               {confirmPasswordError && (
+//                 <div className="error">{confirmPasswordError}</div>
+//               )}
+//             </Form.Group>
+//           </div>
+//           <div>
+//             <Button type="submit" variant="primary">
+//               Register
+//             </Button>
+//           </div>
+//           <div>
+//             <Row className="py-3">
+//               <Col>
+//                 Already have an account? <Link to={`/login`}>Log in</Link>
+//                 {/* <Link
+//                   to={redirect ? `/login?redirect=${redirect}` : '/login'}
+//                 >
+//                   Log in
+//                 </Link> */}
+//               </Col>
+//             </Row>
+//           </div>
+//         </Form>
+//       )}
+//     </div>
+//   );
+// }
+
+{
+  /* <div className="container">
+      <div className="row">
+        <div className="col-md-6 mt-5 mx-auto">
+          <form noValidate onSubmit={handleSubmitRegister}>
+            <h1 className="h3 mb-3 font-weight-normal">Register</h1>
+            <div className="form-group">
+              <label htmlFor="name">Name</label>
+              <input
+                type="text"
+                className="form-control"
+                name="name"
+                placeholder="Enter name"
+                value={name}
+                onChange={handleNameChange}
+              />
+              {nameError && <div className="error">{nameError}</div>}
+            </div>
+            <div className="form-group">
+              <label htmlFor="username">Username</label>
+              <input
+                type="text"
+                className="form-control"
+                name="username"
+                placeholder="Enter username"
+                value={username}
+                onChange={handleUsernameChange}
+              />
+              {usernameError && <div className="error">{usernameError}</div>}
+            </div>
+            <div className="form-group">
+              <label htmlFor="email">Email Address</label>
+              <input
+                type="email"
+                className="form-control"
+                name="email"
+                placeholder="Enter Email"
+                value={email}
+                onChange={handleEmailChange}
+              />
+              {emailError && <div className="error">{emailError}</div>}
+            </div>
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
+              <input
+                type="password"
+                className="form-control"
+                name="password"
+                placeholder="Enter Password"
+                value={password}
+                onChange={handlePasswordChange}
+              />
+              {passwordError && <div className="error">{passwordError}</div>}
+            </div>
+            <div className="form-group">
+              <label htmlFor="confirmPassword">Confirm Password</label>
+              <input
+                type="password"
+                className="form-control"
+                name="confirmPassword"
+                placeholder="Confirm Password"
+                value={confirmPassword}
+                onChange={handleConfirmPasswordChange}
+              />
+              {confirmPasswordError && (
+                <div className="error">{confirmPasswordError}</div>
+              )}
+            </div>
+            <button
+              type="submit"
+              className="btn btn-lg btn-primary btn-block"
+              disabled={
+                !nameValid ||
+                !usernameValid ||
+                !emailValid ||
+                !passwordValid ||
+                !confirmPasswordValid
+              }
+            >
+              Register
+            </button>
+            {error1 && <div className="error">Error registering</div>}
+            {successful && (
+              <div className="success">Registration successful</div>
+            )}
+          </form>
+        </div>
+      </div>
+      <div className="row">
+        <div className="col-md-6 mt-5 mx-auto">
+          <form noValidate onSubmit={handleSubmitLogin}>
+            <h1 className="h3 mb-3 font-weight-normal">Login</h1>
+            <div className="form-group">
+              <label htmlFor="username">Username</label>
+              <input
+                type="text"
+                className="form-control"
+                name="username"
+                placeholder="Enter username"
+                value={username}
+                onChange={handleUsernameChange}
+              />
+              {usernameError && <div className="error">{usernameError}</div>}
+            </div>
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
+              <input
+                type="password"
+                className="form-control"
+                name="password"
+                placeholder="Enter Password"
+                value={password}
+                onChange={handlePasswordChange}
+              />
+              {passwordError && <div className="error">{passwordError}</div>}
+            </div>
+            <button
+              type="submit"
+              className="btn btn-lg btn-primary btn-block"
+              disabled={!usernameValid || !passwordValid}
+            >
+              Login
+            </button>
+            {error1 && <div className="error">Error logging in</div>}
+            {successful && <div className="success">Login successful</div>}
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+} */
 }

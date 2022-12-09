@@ -9,11 +9,16 @@ import store from './redux/store';
 
 import { RouterProvider } from 'react-router-dom';
 
-
+import CtxtProvider from './xcontexter';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={store}>
-    <RouterProvider router={browserRouter} />
-    {/* <Snowfall />  */}
+    <CtxtProvider>
+      <RouterProvider router={browserRouter}>
+        {/* <RouterProvider router={browserRouter} /> */}
+        {/* <Snowfall />  */}
+        <App />
+      </RouterProvider>
+    </CtxtProvider>
   </Provider>
 );

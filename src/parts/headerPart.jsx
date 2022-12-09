@@ -7,9 +7,33 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectCart } from '../redux/productSlice';
 import { logoutUser, selectUser } from '../redux/userSlice';
 
+import { useContext } from 'react';
+import { ProjContext } from '../xcontexter';
+
 // import { useAuth } from '../auth/useAuth';
 
 export default function HeaderPart() {
+  const {
+    customer,
+    loading1,
+    error1,
+    setCustomer,
+    // signingup,
+    logout,
+    token,
+    cart1,
+    setCart1,
+    setToken,
+    setError1,
+  } = useContext(ProjContext);
+
+  console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
+  console.log('token', token);
+  console.log('customer', customer);
+  console.log('error1', error1);
+  console.log('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyy')
+
+
   // const dispatch = useDispatch();
   // const user = useSelector(selectUser);
   const cart = useSelector(selectCart);
@@ -19,16 +43,8 @@ export default function HeaderPart() {
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState('');
   const [open, setOpen] = useState(false);
-  // const [flag, setFlag] = useState(0);
-  // useEffect(() => {
-  //   if (controller === 1 || flag === 1) {
-  //     setFlag(1); // logged in flag
-  //   } else {
-  //     setFlag(0); // logged out flag
-  //   }
-  // }, [controller, flag]);
+  
 
-  const flag = JSON.parse(JSON.stringify(controller));
 
   const cartItems =
     cart.length > 0 ? cart.reduce((a, item) => a + item.num, 0) : 0;
@@ -37,7 +53,7 @@ export default function HeaderPart() {
   const handleLogout = () => {
     localStorage.removeItem('userInfo');
     localStorage.removeItem('cartItems');
-    flgarr[0] = 0;
+    setCustomer('');
   };
 
   const handleSearch = (e) => {
@@ -193,10 +209,10 @@ export default function HeaderPart() {
 
           <Col xs={12} md={2}>
             <div className="headerdiv">
-              {controller? (
+              {customer? (
                 <div className="dropdown">
                   <Link to="/#">
-                    {prms.username} <i className="fa fa-caret-down"></i>
+                    {customer} <i className="fa fa-caret-down"></i>
                   </Link>
                   <ul className="dropdown-content">
                     <li>

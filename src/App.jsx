@@ -10,12 +10,15 @@ import LoggedInPart from './parts/loggedInPage';
 import AuthLayout from './parts/layout';
 import SearchPart from './parts/searchPart';
 
+import Check from './parts/userinput';
+
 export const browserRouter = createBrowserRouter([
   {
     path: '/',
     element: <AuthLayout />,
     children: [
       { path: '/', element: <HomePage /> },
+      { path: '/check', element: <Check /> },
       { path: '/home', element: <HomePart /> },
       { path: '/product/:id', element: <ProductPart /> },
       { path: '/cart/:id', element: <CartPart /> },
@@ -31,7 +34,6 @@ export const browserRouter = createBrowserRouter([
   },
 ]);
 
-
 export default function App() {
   return (
     <div>
@@ -40,8 +42,6 @@ export default function App() {
     </div>
   );
 }
-
-
 
 // ReactDOM.render(
 //   <Provider store={store}>
@@ -76,8 +76,6 @@ export default function App() {
 // //   </React.StrictMode>
 // // );
 
-
-
 // // update the app.js file
 // import React from 'react';
 // import { Route, Routes } from 'react-router-dom';
@@ -94,7 +92,7 @@ export default function App() {
 
 // function App() {
 //   return (
-//     <div 
+//     <div
 //     // className="App"
 //     >
 //       {/* <header>
