@@ -15,8 +15,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={store}>
     <CtxtProvider>
       <RouterProvider router={browserRouter}>
-        {/* <RouterProvider router={browserRouter} /> */}
-        {/* <Snowfall />  */}
+        <Snowfall /> 
         <App />
       </RouterProvider>
     </CtxtProvider>
