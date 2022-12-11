@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCartShopping, faSearch } from '@fortawesome/free-solid-svg-icons';
-import { Form, Link, useSearchParams, useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { Link, useSearchParams, useParams, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { selectCart } from '../redux/productSlice';
 // import { logoutUser, selectUser } from '../redux/userSlice';
+// import { Form} from 'react-router-dom';
+import { Form } from 'react-bootstrap';
 
 import { useContext } from 'react';
 import { ProjContext } from '../xcontexter';
@@ -13,20 +15,26 @@ import { ProjContext } from '../xcontexter';
 // import { useAuth } from '../auth/useAuth';
 
 export default function HeaderPart() {
-  const {
-    flagg,
-    customer,
-    error1,
-    setCustomer,
-    token,
-  } = useContext(ProjContext);
-  
+  const { 
+    flagg, 
+    customer, 
+    error1, 
+    setCustomer, 
+    token, 
+    loggedin, 
+    setLoggedin,
+    // registered 
+  } =
+    useContext(ProjContext);
 
-  console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
-  console.log('token', token);
-  console.log('customer', customer);
-  console.log('error1', error1);
-  console.log('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyy');
+  // console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
+  // // console.log('token', token);
+  // console.log('customer', customer);
+  // console.log('error1', error1);
+  // console.log('is logged in', loggedin);
+  // console.log('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyy');
+
+  // const navigate = useNavigate();
 
   // const dispatch = useDispatch();
   // const user = useSelector(selectUser);
@@ -46,6 +54,7 @@ export default function HeaderPart() {
     localStorage.removeItem('userInfo');
     localStorage.removeItem('cartItems');
     setCustomer('');
+    setLoggedin(false);
   };
 
   const handleSearch = (e) => {
@@ -201,14 +210,16 @@ export default function HeaderPart() {
 
           <Col xs={12} md={2}>
             <div className="headerdiv">
-              {(customer && flagg=='login')? (
+              {
+              // customer && flagg == 'login' && 
+              loggedin? (
                 <div className="dropdown">
                   <Link to="/#">
                     {customer} <i className="fa fa-caret-down"></i>
                   </Link>
                   <ul className="dropdown-content">
                     <li>
-                      <Link to={`/profile/${customer}`} > Profile </Link>
+                      <Link to={`/profile/${customer}`}> Profile </Link>
                     </li>
                     <li>
                       <Link to="/#">Orders</Link>
@@ -227,6 +238,7 @@ export default function HeaderPart() {
                   </ul>
                 </div>
               ) : (
+                // navigate('/login', { replace: true })
                 <Link to="/login">Log in</Link>
               )}
               <Link to="/cart">

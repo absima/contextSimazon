@@ -12,6 +12,10 @@ const CtxtProvider = (props) => {
   const [cart1, setCart1] = useState([2]);
   const [flagg, setFlagg] = useState('login');
   const [successful, setSuccessful] = useState(false);
+
+  const [loggedin, setLoggedin] = useState(false);
+  const [registered, setRegistered] = useState(false);
+
   // const navigate = useNavigate();
   //
   const [token, setToken] = useLocalalStorage('token', null);
@@ -19,7 +23,11 @@ const CtxtProvider = (props) => {
   // customer, loading1, error1, setCustomer, setSuccessful, successful, signingup, logout, token, cart1, setCart1, setToken,
 
   const value = {
-    // navigate,
+    // navigate
+    loggedin,
+    setLoggedin,
+    registered,
+    setRegistered,
     customer,
     loading1,
     error1,

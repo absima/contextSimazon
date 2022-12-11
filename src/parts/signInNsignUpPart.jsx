@@ -17,9 +17,15 @@ export default function SignInOrSignUpPart({ flag }) {
   // console.log('-------user------', user);
   // const error = useSelector(selectError);
 
+  
+
   const navigate = useNavigate();
   //
   const {
+    loggedin,
+    setLoggedin,
+    registered,
+    setRegistered,
     flagg,
     setFlagg,
     customer,
@@ -53,6 +59,11 @@ export default function SignInOrSignUpPart({ flag }) {
   const [successful, setSuccessful] = useState(false);
 
   setFlagg(flag);
+  // console.log('successfull', successful);
+  // console.log('error1', error1)
+  // console.log('flagg', flagg);
+
+
 
   const validateEmail = (email) => {
     const re =
@@ -98,6 +109,7 @@ export default function SignInOrSignUpPart({ flag }) {
       .then((result) => {
         setCustomer(username);
         setError1(false);
+        setLoggedin(false);
       })
       .catch((error) => {
         console.log(error);
@@ -128,6 +140,14 @@ export default function SignInOrSignUpPart({ flag }) {
       // console.log('sigining in ', token);
       setToken(token);
       setCustomer(username);
+      if (token.error) {
+        setError1(true);
+      } else {
+        setError1(false);
+        setLoggedin(true);
+      }
+
+
       token.error ? setError1(true) : setError1(false);
 
       // setError1(false);
@@ -261,22 +281,37 @@ export default function SignInOrSignUpPart({ flag }) {
   ]);
 
   // useEffect for navigation to profile page
+        // flagg=='login' && !error1 && customer && 
+
   useEffect(() => {
-    !error1 && customer
-      ? flagg == 'login'
-        ? navigate(`/profile/${customer}`, { replace: true })
-        : navigate(`/registered`, { replace: true })
-      : console.log('error1', error1);
+    if (flagg == 'login' && loggedin) {
+      navigate(`/profile/${customer}`, { replace: true });
+    }
+    if (flagg == 'register' && !error1) {
+      navigate(`/registered`, { replace: true });
+      setFlagg('login');
+    }
   }, [error1, customer]);
 
-  // // useEffect for navigation to just registered user
-  // useEffect(() => {
-  //   if (!error1 && customer && flagg == 'register') {
-  //     const to = `/registered/${customer}`;
+    
+
+
+  //   if (loggedin) {
+  //     navigate(`/profile/${customer}`, { replace: true });
+  //   } else {
+  //     navigate(`/login`, { replace: true });
   //   }
+
   // }, [error1, customer]);
 
-  // return with form validator functionallity
+  //   if (!error1 && customer && loggedin) {
+  //     flagg == 'login'?
+  //       navigate(`/profile/${customer}`, { replace: true })
+  //       : navigate(`/registered`, { replace: true })
+  //   }
+  // }, [error1, customer]);
+  
+
   return (
     <div className="container main-div">
       {flagg == 'register' ? (
@@ -387,7 +422,8 @@ export default function SignInOrSignUpPart({ flag }) {
             // // !error1 ? regredirect() : null
           }
         </form>
-      ) : flagg == 'login' ? (
+      ) : //flagg == 'login' ?
+       (
         <form className="form" noValidate onSubmit={handleSubmitLogin}>
           <div>
             <h1>Login</h1>
@@ -433,28 +469,40 @@ export default function SignInOrSignUpPart({ flag }) {
             <div>
               New customer? <Link to={`/register`}>Create your account</Link>
             </div>
-          </div>
-          {/* {!error1 && customer
-            ? navigate(`/profile/${customer}`, { replace: true })
-            : null} */}
+          </div> 
         </form>
-      ) : (
-        <Form className="form" onSubmit={handleLogout}>
-          <div>
-            <h1>Sign Out</h1>
-          </div>
-          <div>
-            {loading && <LoadingIndicator></LoadingIndicator>}
-            {error1 && <Message variant="danger">{error1}</Message>}
-          </div>
-          <div>
-            <label />
-            <button className="buttoncolor" type="submit">
-              Log out
-            </button>
-          </div>
-        </Form>
-      )}
+      ) 
+      // : (
+      //   <div>
+      //     <h1>Profile</h1>
+      //     <div>
+      //       <label>
+      //         <strong>Username:</strong>
+      //       </label>{' '}
+      //       {customer}
+      //     </div>
+      //   </div>
+
+
+
+
+        // <Form className="form" onSubmit={handleLogout}>
+        //   <div>
+        //     <h1>Sign Out</h1>
+        //   </div>
+        //   <div>
+        //     {loading && <LoadingIndicator></LoadingIndicator>}
+        //     {error1 && <Message variant="danger">{error1}</Message>}
+        //   </div>
+        //   <div>
+        //     <label />
+        //     <button className="buttoncolor" type="submit">
+        //       Log out
+        //     </button>
+        //   </div>
+        // </Form>
+      // )
+      }
     </div>
   );
 }
