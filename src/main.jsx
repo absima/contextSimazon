@@ -16,7 +16,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <CtxtProvider>
       <BrowserRouter>
       {/* <RouterProvider router={browserRouter}/> */}
-        {/* <Snowfall>  */}
+        <Snowfall /> 
         <App />
         {/* </Snowfall> */}
       {/* </RouterProvider> */}
