@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Link, redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-import { Row, Col, Form, Button } from 'react-bootstrap';
+// import { Row, Col, Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import LoadingIndicator from '../components/loading';
+// import LoadingIndicator from '../components/loading';
 import Message from '../components/message';
 
 //
@@ -17,15 +17,11 @@ export default function SignInOrSignUpPart({ flag }) {
   // console.log('-------user------', user);
   // const error = useSelector(selectError);
 
-  
-
   const navigate = useNavigate();
   //
   const {
     loggedin,
     setLoggedin,
-    registered,
-    setRegistered,
     flagg,
     setFlagg,
     customer,
@@ -40,8 +36,6 @@ export default function SignInOrSignUpPart({ flag }) {
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-
-  const [register, setRegister] = useState('');
 
   const [nameError, setNameError] = useState('');
   const [usernameError, setUsernameError] = useState('');
@@ -62,8 +56,6 @@ export default function SignInOrSignUpPart({ flag }) {
   // console.log('successfull', successful);
   // console.log('error1', error1)
   // console.log('flagg', flagg);
-
-
 
   const validateEmail = (email) => {
     const re =
@@ -119,9 +111,7 @@ export default function SignInOrSignUpPart({ flag }) {
 
   // login part
   const signingin = async (username, password) => {
-    // console.log('zzzzzzzzzzzzzzzzz');
-    // console.log('username', username);
-    // console.log('password', password);
+    
     // try catch
     try {
       const res = await fetch('http://localhost:5050/user/login', {
@@ -137,16 +127,16 @@ export default function SignInOrSignUpPart({ flag }) {
       });
       const token = await res.json();
 
-      // console.log('sigining in ', token);
       setToken(token);
       setCustomer(username);
       if (token.error) {
         setError1(true);
+        setLoggedin(false);
       } else {
         setError1(false);
         setLoggedin(true);
+        console.log('logged in');
       }
-
 
       token.error ? setError1(true) : setError1(false);
 
@@ -155,7 +145,9 @@ export default function SignInOrSignUpPart({ flag }) {
     } catch (err) {
       setToken(null);
       setError1(true);
+      setLoggedin(false);
       // setSuccessful(false);
+      console.log('catch error');
     }
   };
 
@@ -281,7 +273,7 @@ export default function SignInOrSignUpPart({ flag }) {
   ]);
 
   // useEffect for navigation to profile page
-        // flagg=='login' && !error1 && customer && 
+  // flagg=='login' && !error1 && customer &&
 
   useEffect(() => {
     if (flagg == 'login' && loggedin) {
@@ -292,9 +284,6 @@ export default function SignInOrSignUpPart({ flag }) {
       setFlagg('login');
     }
   }, [error1, customer]);
-
-    
-
 
   //   if (loggedin) {
   //     navigate(`/profile/${customer}`, { replace: true });
@@ -310,7 +299,6 @@ export default function SignInOrSignUpPart({ flag }) {
   //       : navigate(`/registered`, { replace: true })
   //   }
   // }, [error1, customer]);
-  
 
   return (
     <div className="container main-div">
@@ -422,8 +410,7 @@ export default function SignInOrSignUpPart({ flag }) {
             // // !error1 ? regredirect() : null
           }
         </form>
-      ) : //flagg == 'login' ?
-       (
+      ) : flagg == 'login' ? (
         <form className="form" noValidate onSubmit={handleSubmitLogin}>
           <div>
             <h1>Login</h1>
@@ -469,40 +456,9 @@ export default function SignInOrSignUpPart({ flag }) {
             <div>
               New customer? <Link to={`/register`}>Create your account</Link>
             </div>
-          </div> 
+          </div>
         </form>
-      ) 
-      // : (
-      //   <div>
-      //     <h1>Profile</h1>
-      //     <div>
-      //       <label>
-      //         <strong>Username:</strong>
-      //       </label>{' '}
-      //       {customer}
-      //     </div>
-      //   </div>
-
-
-
-
-        // <Form className="form" onSubmit={handleLogout}>
-        //   <div>
-        //     <h1>Sign Out</h1>
-        //   </div>
-        //   <div>
-        //     {loading && <LoadingIndicator></LoadingIndicator>}
-        //     {error1 && <Message variant="danger">{error1}</Message>}
-        //   </div>
-        //   <div>
-        //     <label />
-        //     <button className="buttoncolor" type="submit">
-        //       Log out
-        //     </button>
-        //   </div>
-        // </Form>
-      // )
-      }
+      ) : null}
     </div>
   );
 }
