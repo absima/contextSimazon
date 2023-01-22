@@ -2,64 +2,36 @@ import React, { useEffect, useState } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCartShopping, faSearch } from '@fortawesome/free-solid-svg-icons';
-import { Link, useSearchParams, useParams, useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { selectCart } from '../redux/productSlice';
-// import { logoutUser, selectUser } from '../redux/userSlice';
-// import { Form} from 'react-router-dom';
+import {
+  Link,
+  useSearchParams,
+  useParams,
+} from 'react-router-dom';
+
 import { Form } from 'react-bootstrap';
 
 import { useContext } from 'react';
-import { ProjContext } from '../xcontexter';
-
-// import { useAuth } from '../auth/useAuth';
+import { ProjContext } from '../contexter';
 
 export default function HeaderPart() {
-  const { 
-    flagg, 
-    customer, 
-    error1, 
-    setCustomer, 
-    token, 
-    loggedin, 
-    setLoggedin,
-    // registered 
-  } =
+  const { customer, setCustomer, loggedin, cartItems } =
     useContext(ProjContext);
 
-  // console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
-  // // console.log('token', token);
-  // console.log('customer', customer);
-  // console.log('error1', error1);
-  // console.log('is logged in', loggedin);
-  // console.log('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyy');
-
-  // const navigate = useNavigate();
-
-  // const dispatch = useDispatch();
-  // const user = useSelector(selectUser);
-  const cart = useSelector(selectCart);
   const [searchParams, setSearchParams] = useSearchParams();
   const prms = useParams();
-  const controller = prms.username ? 1 : 0;
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState('');
   const [open, setOpen] = useState(false);
 
-  const cartItems =
-    cart.length > 0 ? cart.reduce((a, item) => a + item.num, 0) : 0;
-
-  //
+  // handle logout
   const handleLogout = () => {
-    localStorage.removeItem('userInfo');
-    localStorage.removeItem('cartItems');
+    console.log('logout');
+    localStorage.removeItem('token');
+    // localStorage.clear();
     setCustomer('');
-    setLoggedin(false);
+    // setLoggedin(false);
   };
 
-  const handleSearch = (e) => {
-    setSearch(e.target.value);
-  };
 
   const handleFilter = (e) => {
     setFilter(e.target.value);
@@ -99,12 +71,26 @@ export default function HeaderPart() {
     }
   }, [search]);
 
+  console.log('searchParams', searchParams);
+  console.log('filter', filter);
+  console.log('search', search);
+
+  
   return (
     <header className="header">
       <Container>
-        <Row className="align-items-end">
-          <Col xs={12} md={3}>
-            <div className="headerdiv">
+        <Row
+          className="align-items-end"
+          style={{
+            // backgroundColor: 'white',
+            height: '5.5rem',
+            // borderBottom: '1px solid #e0e0e0',
+          }}
+        >
+          <Col xs={12} md={2}>
+            <div
+            // className="headerdiv"
+            >
               <div>
                 <Link className="brand" to="/">
                   simazon
@@ -113,134 +99,123 @@ export default function HeaderPart() {
             </div>
           </Col>
 
-          <Col xs={12} md={7} className="search">
-            <select
-              className="selectCategory"
-              name="category"
-              value=""
-              // value={filter}
-              // value = {searchParams.get("filter") || ""}
-              onChange={handleSelect}
+          <Col
+            xs={12}
+            md={7}
+            // className="search"
+          >
+            <div
+              style={{
+                width: '100%',
+                height: '5rem',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+
+              }}
             >
-              <option value="">...</option>
-              <option value="smartphones">Smartphones</option>
-              <option value="laptops">Laptops</option>
-              <option value="fragrances">Fragrances</option>
-              <option value="skincare">Skin Care</option>
-              <option value="groceries">Groceries</option>
-              <option value="home-decoration">Decos</option>
-            </select>
-            <Form
-              onSubmit={
-                handleSubmit
-                // handleFilter
-              }
-            >
-              <input
-                className="input"
-                name="search"
-                type="text"
-                placeholder="Search..."
-                value={filter}
-                onChange={
-                  handleFilter
-                  // handleSubmit
-                }
-              />
-              <button
-                type="submit"
+              <select
                 // className="selectCategory"
+                style={{
+                  width: '10%',
+                  height: '100%',
+                  minWidth: '7rem',
+                }}
+                name="category"
+                value=""
+                // value={filter}
+                // value = {searchParams.get("filter") || ""}
+                onChange={
+                  (e) => 
+                  handleSelect(e)
+                }
               >
-                <i className="fa fa-search "></i>
-              </button>
-            </Form>
-          </Col>
+                <option value="">...</option>
+                <option value="smartphones">Smartphones</option>
+                <option value="laptops">Laptops</option>
+                <option value="fragrances">Fragrances</option>
+                <option value="skincare">Skin Care</option>
+                <option value="groceries">Groceries</option>
+                <option value="home-decoration">Decos</option>
+              </select>
 
-          {/* <Col xs={12} md={7} className="search1">
-            <Row className="align-items-center">
-              <Col xs={1} md={1}>
-                <div
+              <Form
+                style={{
+                  width: '100%', 
+                  height: '100%',
+                  display: 'flex',
+                }}
+
+                onSubmit={ 
+                  (e) =>
+                  handleSubmit(e)
+                  // handleFilter
+                }
+              >
+                <input
+                  // className="input"
                   style={{
-                    paddingLeft: '1rem',
+                    width: '82%',
+                    height: '100%',
                   }}
-                  className="headerdiv"
+                  name="search"
+                  type="text"
+                  placeholder="Search..."
+                  value={filter}
+                  onChange={ 
+                    (e) => 
+                    handleFilter(e)
+                    // handleSubmit
+                  }
+                />
+                <button
+                  type="submit"
+                  style={{
+                    width: '8%',
+                    height: '100%',
+                    minWidth: '5rem',
+                    color: 'gray',
+                    }}
+                  // className="selectCategory"
                 >
-                  <select
-                    className="selectCategory"
-                    name="category"
-                    value="ab"
-                    onChange={handleSelect}
-                  >
-                    <option value="">...</option>
-                    <option value="smartphones">Smartphones</option>
-                    <option value="laptops">Laptops</option>
-                    <option value="fragrances">Fragrances</option>
-                    <option value="skincare">Skin Care</option>
-                    <option value="groceries">Groceries</option>
-                    <option value="home-decoration">Decos</option>
-                  </select>
-                </div>
-              </Col>
-
-              <Col xs={11} md={11}>
-                <div className="headerdiv">
-                  <Form
-                    onSubmit={
-                      handleSubmit
-                    }
-                  >
-                    <input
-                      className="input"
-                      name="search"
-                      type="text"
-                      placeholder="Search..."
-                      value={filter}
-                      onChange={
-                        handleFilter
-                      }
-                    />
-                    <button type="submit" className="searchButton">
-                      <FontAwesomeIcon icon={faSearch} />
-                    </button>
-                  </Form>
-                </div>
-              </Col>
-            </Row>
-          </Col> */}
+                  <i className="fa fa-search "></i>
+                </button>
+              </Form>
+            </div>
+          </Col>
 
           <Col xs={12} md={2}>
             <div className="headerdiv">
               {
-              // customer && flagg == 'login' && 
-              loggedin? (
-                <div className="dropdown">
-                  <Link to="/#">
-                    {customer} <i className="fa fa-caret-down"></i>
-                  </Link>
-                  <ul className="dropdown-content">
-                    <li>
-                      <Link to={`/profile/${customer}`}> Profile </Link>
-                    </li>
-                    <li>
-                      <Link to="/#">Orders</Link>
-                    </li>
-                    <li>
-                      <Link to="/#">Messages</Link>
-                    </li>
-                    <li>
-                      <Link to="/#">Settings</Link>
-                    </li>
-                    <li>
-                      <Link to="/home" onClick={handleLogout}>
-                        Log out
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-              ) : (
-                // navigate('/login', { replace: true })
-                <Link to="/login">Log in</Link>
-              )}
+                // customer && flagg == 'login' &&
+                loggedin && customer ? (
+                  <div className="dropdown">
+                    {customer.username} <i className="fa fa-caret-down"></i>
+                    <ul className="dropdown-content">
+                      <li>
+                        <Link to={`/dashboard`}> Profile </Link>
+                      </li>
+                      <li>
+                        <Link to="/#">Orders</Link>
+                      </li>
+                      <li>
+                        <Link to="/#">Messages</Link>
+                      </li>
+                      <li>
+                        <Link to="/#">Settings</Link>
+                      </li>
+                      <li>
+                        <Link to="/products" onClick={handleLogout}>
+                          Log out
+                        </Link>
+                      </li>
+                    </ul>
+                  </div>
+                ) : (
+                  // navigate('/login', { replace: true })
+                  <Link to="/login">Log in</Link>
+                )
+              }
               <Link to="/cart">
                 &nbsp; <FontAwesomeIcon icon={faCartShopping} size="lg" />
                 {cartItems > 0 && <span className="notif">{cartItems}</span>}

@@ -1,8 +1,5 @@
-// create cart screen
 import { useEffect, useState } from 'react';
 import { useParams, useLocation, Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import LoadingIndicator from '../components/loading';
 import Message from '../components/message';
 import {
   Container,
@@ -14,59 +11,38 @@ import {
   Button,
 } from 'react-bootstrap';
 
-import {
-  addNremove,
-  selectCart,
-  selectLoading,
-  selectError,
-} from '../redux/productSlice';
+import { useContext } from 'react';
+import { ProjContext } from '../contexter';
 
 export default function CartPart() {
-  const { id } = useParams();
+  const { product, useCart, cartItems, setCartItems } = useContext(ProjContext);
 
-  const dispatch = useDispatch();
-  const cart = useSelector(selectCart);
-  const loading = useSelector(selectLoading);
-  const error = useSelector(selectError);
+  const { cart, updateCart, removeFromCart, clearCart } = useCart();
+
+  const params = useParams();
+  console.log('params -- -- -- -- ', params);
+
   const { search } = useLocation();
-
   const qtyInUrl = new URLSearchParams(search).get('qty');
+
   let quant;
   if (cart.length !== 0) {
     quant = qtyInUrl ? Number(qtyInUrl) : cart[cart.length - 1].num;
-    // dispatch(addNremove({ id, quant }));
   } else {
     quant = qtyInUrl ? Number(qtyInUrl) : 1;
-    // dispatch(addNremove({ id, quant }));
   }
 
-  // const quant = qtyInUrl ? Number(qtyInUrl) : cart[cart.length - 1].num;
-
-  const qtysInit = cart.map((item) => item.num);
-  const [qties, setQties] = useState([]);
-
-  const [qty, setQty] = useState(quant);
-  const [flag, setFlag] = useState('add');
-
-  // const qntqnt = qties.length || qtysInit;
-
-  // console.log('id', id);
-  // console.log('qty', qty);
-  // console.log('cart', cart);
-  // console.log('qties', qties);
-  // console.log('qtysInit', qtysInit);
-
-  // write useEffect to dispatch addNremove
-
+  // setCartItems whenever there is change in cart
   useEffect(() => {
-    if (id) {
-      dispatch(addNremove(id, qty, flag));
-    }
-  }, [id, qty, flag, dispatch]);
+    setCartItems(
+      cart.length > 0 ? cart.reduce((a, item) => a + item.quantity, 0) : 0
+    );
+  }, [cart]);
 
-  // const removeFromCartHandler = (id) => {
-  //   dispatch(deleteFromCart(id));
-  // };
+  console.log('cart -- -- -- -- ', cart);
+  console.log('product', product);
+  console.log('quant', quant);
+  console.log('localStorage', localStorage);
 
   const checkoutHandler = () => {
     props.history.push('/login?redirect=shipping');
@@ -74,6 +50,12 @@ export default function CartPart() {
 
   return (
     <Container className="maindiv">
+      <Link className="btn btn-light my-3" to="/products">
+        <button >
+          <i className="fa fa-arrow-left"></i> &nbsp;
+          Go Back
+        </button>
+      </Link>
       <Row>
         <Col md={8}>
           <h1>Shopping Cart</h1>
@@ -92,6 +74,7 @@ export default function CartPart() {
                         alt={item.title}
                         fluid
                         rounded
+                        style={{ height: '7rem', width: 'auto' }}
                       />
                     </Col>
                     <Col md={3}>
@@ -101,35 +84,32 @@ export default function CartPart() {
                     <Col md={2}>
                       <Form.Control
                         as="select"
-                        value={qties[idx] || item.num}
+                        className="select"
+                        value={item.quantity}
                         onChange={(e) => {
-                          const chosen = Number(e.target.value);
-                          const newQties = [...qties];
-                          newQties[idx] = chosen;
-                          setQties(newQties);
-                          setQty(chosen);
-                          setFlag('add');
+                          const newQuantity = Number(e.target.value);
+                          updateCart(item._id, newQuantity);
                         }}
                       >
                         {[...Array(item.stock).keys()].map((x) => (
-                          <option key={x + 1} value={x + 1}>
+                          <option key={x + 1} value={x + 1} className="option">
                             {x + 1}
                           </option>
                         ))}
                       </Form.Control>
                     </Col>
                     <Col md={2}>
-                      <Button
+                      <button
                         type="button"
                         variant="light"
+                        // className='button'
                         onClick={() => {
-                          // setQty(item.num);
-                          // setFlag('remove');
-                          dispatch(addNremove(item._id, item.num, 'remove'));
+                          console.log('item._id', item._id);
+                          removeFromCart(item._id);
                         }}
                       >
                         <i className="fa fa-trash"></i> Remove
-                      </Button>
+                      </button>
                     </Col>
                   </Row>
                 </ListGroup.Item>
@@ -138,201 +118,38 @@ export default function CartPart() {
           )}
         </Col>
         <Col md={4}>
-          <ListGroup variant="flush" className="card card-body">
-            <ListGroup.Item>
+          {/* <div className="card1 card-body"> */}
+          <ListGroup variant="flush" className="card1 card-body">
+            <ListGroup.Item key="subtotal">
+              <h1>Summary</h1>
               <h2>
-                Subtotal ({cart.reduce((acc, item) => acc + item.num, 0)}) items
+                {cart.reduce((acc, item) => acc + item.quantity, 0)}
+                &nbsp; items in cart
               </h2>
-              €
+              Total price &nbsp; €
               {cart
-                .reduce((acc, item) => acc + item.num * item.price, 0)
+                .reduce((acc, item) => acc + item.quantity * item.price, 0)
                 .toFixed(2)}
             </ListGroup.Item>
-            <ListGroup.Item>
-              <Button
-                type="button"
+            <ListGroup.Item key="proceed">
+              <button
+                // type="button"
                 // style={{ width: '100%',
                 //  backgroundColor: '#918585',
-                //   color: 'black',
+                // color: 'black',
 
                 // }}
-                className="block"
+                className="block buttoncolor"
                 disabled={cart.length === 0}
                 onClick={checkoutHandler}
               >
                 Proceed To Checkout
-              </Button>
+              </button>
             </ListGroup.Item>
           </ListGroup>
+          {/* </div> */}
         </Col>
       </Row>
     </Container>
   );
 }
-
-// // create cart screen
-// import { useEffect, useState } from 'react';
-// import { useParams, useLocation, Link } from 'react-router-dom';
-// import { useDispatch, useSelector } from 'react-redux';
-// import LoadingIndicator from '../components/loading';
-// import Message from '../components/message';
-// import { Row, Col, ListGroup, Image, Form, Button } from 'react-bootstrap';
-
-// import {
-//   addNremove,
-//   selectCart,
-//   selectLoading,
-//   selectError,
-// } from '../redux/productSlice';
-
-// export default function CartPart() {
-//   const { id } = useParams();
-
-//   const dispatch = useDispatch();
-//   const cart = useSelector(selectCart);
-//   const loading = useSelector(selectLoading);
-//   const error = useSelector(selectError);
-//   const { search } = useLocation();
-
-//   const qtyInUrl = new URLSearchParams(search).get('qty');
-//   let quant;
-//   if (cart.length !== 0) {
-//     quant = qtyInUrl ? Number(qtyInUrl) : cart[cart.length - 1].num;
-//     // dispatch(addNremove({ id, quant }));
-//   } else {
-//     quant = qtyInUrl ? Number(qtyInUrl) : 1;
-//     // dispatch(addNremove({ id, quant }));
-//   }
-
-//   // const quant = qtyInUrl ? Number(qtyInUrl) : cart[cart.length - 1].num;
-
-//   const qtysInit = cart.map((item) => item.num);
-//   const [qties, setQties] = useState([]);
-
-//   const [qty, setQty] = useState(quant);
-//   const [flag, setFlag] = useState('add');
-
-//   // const qntqnt = qties.length || qtysInit;
-
-//   // console.log('id', id);
-//   // console.log('qty', qty);
-//   // console.log('cart', cart);
-//   // console.log('qties', qties);
-//   // console.log('qtysInit', qtysInit);
-
-//   // write useEffect to dispatch addNremove
-
-//   useEffect(() => {
-//     if (id) {
-//       dispatch(addNremove(id, qty, flag));
-//     }
-//   }, [id, qty, flag, dispatch]);
-
-//   // const removeFromCartHandler = (id) => {
-//   //   dispatch(deleteFromCart(id));
-//   // };
-
-//   const checkoutHandler = () => {
-//     props.history.push('/login?redirect=shipping');
-//   };
-
-//   return (
-//     <>
-//       <div className="container maindiv">
-//         <div className="cartdiv">
-//           <h1>Cart Section</h1>
-//           {error ? (
-//             <Message variant="danger">{error}</Message>
-//           ) : cart.length === 0 ? (
-//             <Message>
-//               Your cart is empty <Link to="/home">Go Back</Link>
-//             </Message>
-//           ) : (
-//             <ul>
-//               {cart.map((item, idx) => (
-//                 <li key={item._id}>
-//                   <div className="row rowcart">
-//                     <div className="col imagediv">
-//                       <img
-//                         src={item.thumbnail}
-//                         alt={item.title}
-//                         className="cartimg"
-//                       ></img>
-//                     </div>
-//                     <div className="col-3 titdiv">
-//                       <Link to={`/product/${item._id}`}>{item.title}</Link>
-//                     </div>
-//                     <div className="col optdiv">
-//                       <select
-//                         value={qties[idx] || item.num}
-//                         onChange={(e) => {
-//                           const chosen = Number(e.target.value);
-//                           const newQties = [...qties];
-//                           newQties[idx] = chosen;
-//                           setQties(newQties);
-//                           setQty(chosen);
-//                           setFlag('add');
-//                         }}
-//                       >
-//                         {[...Array((item.stock % 10) + 1).keys()].map((x) => (
-//                           <option key={x + 1} value={x + 1}>
-//                             {x + 1}
-//                           </option>
-//                         ))}
-//                       </select>
-//                     </div>
-//                     <div className="col pricediv">
-//                       ${item.price * (qties[idx] || item.num)}
-//                     </div>
-//                     <div className="col deldiv">
-//                       <button
-//                         type="button"
-//                         onClick={(e) =>
-//                           dispatch(addNremove(item._id, item.num, 'remove'))
-//                         }
-//                       >
-//                         Delete
-//                       </button>
-//                     </div>
-//                     <div className="col-3 titdiv"></div>
-//                   </div>
-//                 </li>
-//               ))}
-//             </ul>
-//           )}
-//         </div>
-//         <div className="cartright">
-//           <div className="card card-body">
-//             <ul>
-//               <li>
-//                 <h2 style={{ color: 'black' }}>
-//                   Total ({qtysInit.reduce((a, c) => a + c, 0)} items) :
-//                   <span
-//                   style={{ fontWeight: 'bold', color: 'black'}}
-//                   >
-//                     $
-//                     {cart.reduce(
-//                       (a, c, i) => a + c.price * (qties[i] || c.num),
-//                       0
-//                     )}
-//                   </span>
-//                 </h2>
-//               </li>
-//               <li>
-//                 <button
-//                   type="button"
-//                   onClick={checkoutHandler}
-//                   className="buttoncolor block"
-//                   disabled={cart.length === 0}
-//                 >
-//                   Proceed to Checkout
-//                 </button>
-//               </li>
-//             </ul>
-//           </div>
-//         </div>
-//       </div>
-//       <div className="row top"></div>
-//     </>
-//   );
-// }

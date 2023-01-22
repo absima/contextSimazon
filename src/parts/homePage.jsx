@@ -2,11 +2,45 @@ import { Link } from 'react-router-dom';
 import { Container, Row, Col, Carousel } from 'react-bootstrap';
 import background from '/images/pnew.jpg';
 export default function HomePage(props) {
+  const lists = [
+    {
+      id: 1,
+      image: '/images/chrisgift.jpeg',
+      heading: 'Christmas Gifts',
+      link: '/products',
+    },
+    {
+      id: 2,
+      image: '/images/forher.webp',
+      heading: 'Gifts for her',
+      link: '/products',
+    },
+    {
+      id: 3,
+      image: '/images/forhim.jpeg',
+      heading: 'Gifts for him',
+      link: '/products',
+    },
+    {
+      id: 4,
+      image: '/images/forkids.jpeg',
+      heading: 'Gifts for kids',
+      link: '/products',
+    },
+    {
+      id: 5,
+      image: '/images/onsale.jpeg',
+      heading: 'On Sale',
+      link: '/products',
+    }
+  ];
+
   return (
     <Container
       className="maindiv"
       style={{
-        backgroundImage: 'url(' + background + ')',
+        // backgroundImage: `url(${background})`,
+        backgroundColor: 'white',
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
@@ -15,133 +49,67 @@ export default function HomePage(props) {
     >
       <Row className="align-items-start">
         <Col xs={12} md={6} lg={6}>
-          <h2 className="simplyamazon">simply amazon</h2>
-          <Link to="/products" className="btn btn-primary">
-            Shop Now
+          <h1 
+          style={{
+            fontWeight: 'bold', 
+            fontSize: '4rem', 
+            marginTop: '.5rem', 
+            paddingLeft: '1rem',
+            color: 'rgb(32, 48, 64)'}}
+          
+          >simply amazon</h1>
+          <Link to="/products">
+            <button className="buttoncolor">Shop now</button>
           </Link>
-          <h1
-            style={{
-              fontSize: '2.2rem',
-              fontWeight: 'bold',
-              paddingLeft: '1rem',
-              marginTop: '10rem',
-              // backgroundColor: 'white',
-              width: '50%',
-            }}
-          >
-            <div
-              style={{
-                fontSize: '4rem',
-                color: 'green',
-              }}
-            >
-              Oh deer...,
-            </div>
-            <div
-              style={{
-                color: 'red',
-                paddingLeft: '2.5rem',
-              }}
-            >
-              Christmas is here!
-            </div>
-          </h1>
-          {/* </div> */}
+
         </Col>
 
         <Col xs={12} md={6} lg={6}>
-          <div className="carousel">
+          <div 
+          style={{marginTop: '2rem'}}
+          >
             <Row>
               <Carousel>
-                <Carousel.Item>
-                  <img
-                    className="d-block w-100 carouselimage"
-                    src="./images/chrisgift.jpeg"
-                    alt="christmas"
-                  />
+                {lists.map((list) => (
+                  <Carousel.Item key={list.id}>
+                    <h3 className="caroheading" 
+                    style={{
+                      fontWeight: 'bold',
+                      fontSize: '2rem',
+                      color: 'rgb(32, 48, 64)',
+                    }}
+                    >{list.heading}</h3>
+                    <img
+                      className="d-block w-100 carouselimage"
+                      src={list.image}
+                      alt={list.heading}
+                    />
+                    <Carousel.Caption 
+                    style={{
+                      marginBottom: '23rem',
+                      marginInline: '1rem',
+                      marginLeft: '1rem',
+                    //   borderRadius: '1rem',
+                    //   // padding: '1rem',
+                    //   width: '50%',
+                    //   // marginBottom: '40%',
+                    //   marginTop: '1rem',
+                    //   marginLeft: '1%',
 
-                  <Carousel.Caption className="carouselcaption">
-                    <h3 className="caroheading">Christmas Gifts</h3>
-                    <Link to="/products" className="btn btn-primary">
-                      click here
-                    </Link>
-                  </Carousel.Caption>
-                </Carousel.Item>
 
-                <Carousel.Item>
-                  <img
-                    className="d-block w-100 carouselimage"
-                    src="./images/forher.webp"
-                    alt="for women"
-                  />
-                  <Carousel.Caption className="carouselcaption">
-                    <h3>Gifts for her</h3>
-                    <Link to="/products" className="btn btn-primary">
-                      click here
-                    </Link>
-                  </Carousel.Caption>
-                </Carousel.Item>
-                <Carousel.Item>
-                  <img
-                    className="d-block w-100 carouselimage"
-                    src="./images/forhim.jpeg"
-                    alt="for men"
-                  />
-                  <Carousel.Caption className="carouselcaption">
-                    <h3>Gifts for him</h3>
-                    <Link to="/products" className="btn btn-primary">
-                      click here
-                    </Link>
-                  </Carousel.Caption>
-                </Carousel.Item>
-
-                <Carousel.Item>
-                  <img
-                    className="d-block w-100  carouselimage"
-                    src="./images/forkids.jpeg"
-                    alt="for kids"
-                  />
-
-                  <Carousel.Caption className="carouselcaption">
-                    <h3>Gifts for kids</h3>
-                    <Link to="/products" className="btn btn-primary">
-                      click here
-                    </Link>
-                  </Carousel.Caption>
-                </Carousel.Item>
-
-                <Carousel.Item>
-                  <img
-                    className="d-block w-100 carouselimage"
-                    src="./images/featured.jpeg"
-                    alt="featured"
-                  />
-
-                  <Carousel.Caption className="carouselcaption">
-                    <h3> Featured products </h3>
-                    <Link to="/products" className="btn btn-primary">
-                      click here
-                    </Link>
-                  </Carousel.Caption>
-                </Carousel.Item>
-
-                <Carousel.Item>
-                  <img
-                    className="d-block w-100 carouselimage"
-                    src="./images/onsale.jpeg"
-                    alt="on sale"
-                  />
-                  <Carousel.Caption className="carouselcaption">
-                    <h3> On Sale</h3>
-                    <Link to="/products" className="btn btn-primary">
-                      click here
-                    </Link>
-                    {/* <p>
-                    Nulla vitae elit libero, a pharetra augue mollis interdum.
-                  </p> */}
-                  </Carousel.Caption>
-                </Carousel.Item>
+                      }}
+                    >
+                      <Link to={list.link} >
+                        <button 
+                        className="buttoncolor"
+                        
+                        >Click here</button>
+                      </Link>
+                    </Carousel.Caption>
+                  </Carousel.Item>
+                ))}
               </Carousel>
+              
             </Row>
           </div>
         </Col>
