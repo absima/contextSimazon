@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 // import CtxtProvider from './contexter';
 import App from './App';
 import './index.css';
-// import Snowfall from 'react-snowfall';
+import Snowfall from 'react-snowfall';
 // import { Provider } from 'react-redux';
 // import store from './redux/store';
 
@@ -15,7 +15,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   // <Provider store={store}>
     <CtxtProvider>
       <BrowserRouter>
+        <Snowfall />
         <App />
+        
       </BrowserRouter>
     </CtxtProvider>
   // </Provider>

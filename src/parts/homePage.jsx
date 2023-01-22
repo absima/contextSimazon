@@ -40,7 +40,7 @@ export default function HomePage(props) {
       className="maindiv"
       style={{
         // backgroundImage: `url(${background})`,
-        backgroundColor: 'white',
+        backgroundColor: 'rgb(200, 200, 200',
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
