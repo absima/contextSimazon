@@ -2,11 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCartShopping, faSearch } from '@fortawesome/free-solid-svg-icons';
-import {
-  Link,
-  useSearchParams,
-  useParams,
-} from 'react-router-dom';
+import { Link, useSearchParams, useParams } from 'react-router-dom';
 
 import { Form } from 'react-bootstrap';
 
@@ -31,7 +27,6 @@ export default function HeaderPart() {
     setCustomer('');
     // setLoggedin(false);
   };
-
 
   const handleFilter = (e) => {
     setFilter(e.target.value);
@@ -75,22 +70,14 @@ export default function HeaderPart() {
   console.log('filter', filter);
   console.log('search', search);
 
-  
   return (
-    <header className="header">
+    <header
+    // className="header"
+    >
       <Container>
-        <Row
-          className="align-items-end"
-          style={{
-            // backgroundColor: 'white',
-            height: '5.5rem',
-            // borderBottom: '1px solid #e0e0e0',
-          }}
-        >
+        <Row>
           <Col xs={12} md={2}>
-            <div
-            // className="headerdiv"
-            >
+            <div>
               <div>
                 <Link className="brand" to="/">
                   simazon
@@ -111,7 +98,6 @@ export default function HeaderPart() {
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-
               }}
             >
               <select
@@ -125,10 +111,7 @@ export default function HeaderPart() {
                 value=""
                 // value={filter}
                 // value = {searchParams.get("filter") || ""}
-                onChange={
-                  (e) => 
-                  handleSelect(e)
-                }
+                onChange={(e) => handleSelect(e)}
               >
                 <option value="">...</option>
                 <option value="smartphones">Smartphones</option>
@@ -141,14 +124,12 @@ export default function HeaderPart() {
 
               <Form
                 style={{
-                  width: '100%', 
+                  width: '100%',
                   height: '100%',
                   display: 'flex',
                 }}
-
-                onSubmit={ 
-                  (e) =>
-                  handleSubmit(e)
+                onSubmit={
+                  (e) => handleSubmit(e)
                   // handleFilter
                 }
               >
@@ -162,9 +143,8 @@ export default function HeaderPart() {
                   type="text"
                   placeholder="Search..."
                   value={filter}
-                  onChange={ 
-                    (e) => 
-                    handleFilter(e)
+                  onChange={
+                    (e) => handleFilter(e)
                     // handleSubmit
                   }
                 />
@@ -175,7 +155,7 @@ export default function HeaderPart() {
                     height: '100%',
                     minWidth: '5rem',
                     color: 'gray',
-                    }}
+                  }}
                   // className="selectCategory"
                 >
                   <i className="fa fa-search "></i>
@@ -223,7 +203,9 @@ export default function HeaderPart() {
             </div>
           </Col>
         </Row>
+        {/* <Row> */}
         <hr />
+        {/* </Row> */}
       </Container>
     </header>
   );
