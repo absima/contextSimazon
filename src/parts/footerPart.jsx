@@ -139,7 +139,7 @@ const FooterPart = () => {
         <Row>
           <Col className="text-center py-3">
             <p>
-              &copy;{new Date().getFullYear()} simazon | All rights reserved  | Privacy
+              &copy;{new Date().getFullYear()} Simachew
             </p>
           </Col>
         </Row>
