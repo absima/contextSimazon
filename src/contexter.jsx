@@ -22,7 +22,7 @@ const CtxtProvider = (props) => {
     const getProducts = async () => {
       try {
         setLoading(true);
-        const { data } = await axios.get(`${api_url}/item`);
+        const { data } = await axios.get(`${api_url}/product`);
         setProducts(data);
         setLoading(false);
       } catch (error) {

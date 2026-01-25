@@ -270,6 +270,13 @@ bottom: 'auto', */
   min-width: 30rem;
 }
 
+.product-thumb {
+  width: 100%;
+  height: 220px;      /* adjust to taste */
+  object-fit: cover; /* prevents stretching */
+  display: block;
+}
+
 /* Card */
 .aaaa {
   color: #a4a4a4;
