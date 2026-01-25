@@ -17,6 +17,9 @@ import {
 // import {  } from "@fortawesome/free-solid-svg-icons";
 import { Link } from 'react-router-dom';
 
+const launchYear = 2022;
+const currentYear = new Date().getFullYear();
+
 const FooterPart = () => {
   return (
     <footer className="footer">
@@ -139,7 +142,8 @@ const FooterPart = () => {
         <Row>
           <Col className="text-center py-3">
             <p>
-              &copy;{new Date().getFullYear()} Simachew
+              &copy; {launchYear}
+              {launchYear < currentYear && ` - ${currentYear}`} simazon
             </p>
           </Col>
         </Row>

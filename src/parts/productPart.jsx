@@ -47,28 +47,10 @@ export default function ProductPart() {
   }, [id]);
   
 
-  // const getProduct = async (id) => {
-  //   try {
-  //     setLoading(true);
-  //     const { data } = await axios.get(`${api_url}/item/${id}`);
-  //     setProduct(data);
-  //     setLoading(false);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   getProduct(id);
-  // }, [id]);
 
   const handleSelect = (selectedIndex, e) => {
     setIndex(selectedIndex);
   };
-
-  // console.log(product);
-  // console.log(loading);
-  // console.log(qty);
 
   return (
     <div className="container maindiv">
