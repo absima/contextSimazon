@@ -1,96 +1,89 @@
-import React, { useEffect, useState } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import React, { useEffect, useRef, useState, useContext } from 'react';
+import { Container, Row, Col, Form } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCartShopping, faSearch } from '@fortawesome/free-solid-svg-icons';
-import { Link, useSearchParams, useParams } from 'react-router-dom';
+import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 
-import { Form } from 'react-bootstrap';
-
-import { useContext } from 'react';
 import { ProjContext } from '../contexter';
 
 export default function HeaderPart() {
-  const { customer, setCustomer, loggedin, cartItems } =
+  const { customer, setCustomer, loggedin, setLoggedin, cartItems } =
     useContext(ProjContext);
 
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const prms = useParams();
-  const [search, setSearch] = useState('');
-  const [filter, setFilter] = useState('');
-  const [open, setOpen] = useState(false);
 
-  // handle logout
-  const handleLogout = () => {
-    console.log('logout');
-    localStorage.removeItem('token');
-    // localStorage.clear();
-    setCustomer('');
-    // setLoggedin(false);
-  };
+  // Keep search field synced with URL if you refresh on /search?filter=...
+  const [filter, setFilter] = useState(searchParams.get('filter') || '');
 
-  const handleFilter = (e) => {
-    setFilter(e.target.value);
-    setSearchParams({ filter: e.target.value });
-  };
-
-  // select category handler
-  const handleSelect = (e) => {
-    setFilter(e.target.value);
-    setSearchParams({ filter: e.target.value });
-  };
-
-  // const handleClear = () => {
-  //   setSearch('');
-  //   setFilter('');
-  //   setSearchParams({});
-  // };
-
-  // submit search handler
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (filter) {
-      setSearchParams({ filter: filter });
-    } else {
-      setSearchParams({});
-    }
-    setSearch('');
-    // close search bar
-    setOpen(false);
-    // redirect to search page
-    window.location.href = '/search?filter=' + filter;
-  };
+  // ✅ stable dropdown (click open/close + click outside closes)
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(null);
 
   useEffect(() => {
-    if (search) {
-      setSearchParams({ filter: search });
-    }
-  }, [search]);
+    const onClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', onClickOutside);
+    return () => document.removeEventListener('mousedown', onClickOutside);
+  }, []);
 
-  console.log('searchParams', searchParams);
-  console.log('filter', filter);
-  console.log('search', search);
+  // logout
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setCustomer(null);
+    setLoggedin(false);
+    setMenuOpen(false);
+    navigate('/login');
+  };
+
+  // category select
+  const handleSelect = (e) => {
+    const value = e.target.value;
+    setFilter(value);
+    setSearchParams(value ? { filter: value } : {});
+  };
+
+  // search input
+  const handleFilter = (e) => {
+    const value = e.target.value;
+    setFilter(value);
+    setSearchParams(value ? { filter: value } : {});
+  };
+
+  // submit search (NO full page reload)
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const q = (filter || '').trim();
+
+    setMenuOpen(false);
+
+    if (q) {
+      setSearchParams({ filter: q });
+      navigate(`/search?filter=${encodeURIComponent(q)}`);
+    } else {
+      setSearchParams({});
+      navigate('/products');
+    }
+  };
 
   return (
-    <header
-    // className="header"
-    >
+    <header>
       <Container>
         <Row>
+          {/* Brand */}
           <Col xs={12} md={2}>
             <div>
-              <div>
-                <Link className="brand" to="/">
-                  simazon
-                </Link>
-              </div>
+              <Link className="brand" to="/">
+                simazon
+              </Link>
             </div>
           </Col>
 
-          <Col
-            xs={12}
-            md={7}
-            // className="search"
-          >
+          {/* ✅ Search column — preserves your original sizing/appearance */}
+          <Col xs={12} md={7}>
             <div
               style={{
                 width: '100%',
@@ -101,19 +94,16 @@ export default function HeaderPart() {
               }}
             >
               <select
-                // className="selectCategory"
                 style={{
                   width: '10%',
                   height: '100%',
                   minWidth: '7rem',
                 }}
                 name="category"
-                value=""
-                // value={filter}
-                // value = {searchParams.get("filter") || ""}
-                onChange={(e) => handleSelect(e)}
+                value="" // keep your previous behavior
+                onChange={handleSelect}
               >
-                <option value="">...</option>
+                <option value=""> all </option>
                 <option value="smartphones">Smartphones</option>
                 <option value="laptops">Laptops</option>
                 <option value="fragrances">Fragrances</option>
@@ -128,13 +118,9 @@ export default function HeaderPart() {
                   height: '100%',
                   display: 'flex',
                 }}
-                onSubmit={
-                  (e) => handleSubmit(e)
-                  // handleFilter
-                }
+                onSubmit={handleSubmit}
               >
                 <input
-                  // className="input"
                   style={{
                     width: '82%',
                     height: '100%',
@@ -143,11 +129,9 @@ export default function HeaderPart() {
                   type="text"
                   placeholder="Search..."
                   value={filter}
-                  onChange={
-                    (e) => handleFilter(e)
-                    // handleSubmit
-                  }
+                  onChange={handleFilter}
                 />
+
                 <button
                   type="submit"
                   style={{
@@ -156,46 +140,65 @@ export default function HeaderPart() {
                     minWidth: '5rem',
                     color: 'gray',
                   }}
-                  // className="selectCategory"
                 >
-                  <i className="fa fa-search "></i>
+                  <i className="fa fa-search"></i>
                 </button>
               </Form>
             </div>
           </Col>
 
+          {/* Account + Cart */}
           <Col xs={12} md={2}>
             <div className="headerdiv">
-              {
-                // customer && flagg == 'login' &&
-                loggedin && customer ? (
-                  <div className="dropdown">
+              {loggedin && customer ? (
+                <div className="dropdown" ref={menuRef}>
+                  <button
+                    type="button"
+                    className="dropdown-toggle-btn"
+                    onClick={() => setMenuOpen((v) => !v)}
+                  >
                     {customer.username} <i className="fa fa-caret-down"></i>
+                  </button>
+
+                  {menuOpen && (
                     <ul className="dropdown-content">
                       <li>
-                        <Link to={`/dashboard`}> Profile </Link>
-                      </li>
-                      <li>
-                        <Link to="/#">Orders</Link>
-                      </li>
-                      <li>
-                        <Link to="/#">Messages</Link>
-                      </li>
-                      <li>
-                        <Link to="/#">Settings</Link>
-                      </li>
-                      <li>
-                        <Link to="/products" onClick={handleLogout}>
-                          Log out
+                        <Link
+                          to="/dashboard"
+                          onClick={() => setMenuOpen(false)}
+                        >
+                          Dashboard
                         </Link>
                       </li>
+                      <li>
+                        <Link
+                          to="/profile/edit"
+                          onClick={() => setMenuOpen(false)}
+                        >
+                          Edit profile
+                        </Link>
+                      </li>
+                      <li>
+                        <Link to="/orders" onClick={() => setMenuOpen(false)}>
+                          My orders
+                        </Link>
+                      </li>
+                      <li>
+                        <button
+                          type="button"
+                          className="dropdown-link-btn"
+                          onClick={handleLogout}
+                        >
+                          Log out
+                        </button>
+                      </li>
                     </ul>
-                  </div>
-                ) : (
-                  // navigate('/login', { replace: true })
-                  <Link to="/login">Log in</Link>
-                )
-              }
+                  )}
+                </div>
+              ) : (
+                <Link to="/login">Log in</Link>
+              )}
+
               <Link to="/cart">
                 &nbsp; <FontAwesomeIcon icon={faCartShopping} size="lg" />
                 {cartItems > 0 && <span className="notif">{cartItems}</span>}
@@ -203,10 +206,10 @@ export default function HeaderPart() {
             </div>
           </Col>
         </Row>
-        {/* <Row> */}
+
         <hr />
-        {/* </Row> */}
       </Container>
     </header>
   );
 }
+

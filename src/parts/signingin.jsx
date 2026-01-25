@@ -103,41 +103,46 @@ const SignIn = () => {
   //
 
   const signingin = async () => {
-    try {
-      
+  try {
+    setLoading(true);
+    setError(null);              // clear previous errors
 
-      setLoading(true);
-      const response = await axios({
-        method: 'post',
-        url: `${api_url}/user/login`,
-        data: {
-          username,
-          password,
-        },
-      });
-      if (!response?.data?.token) {
-        console.log('Something was not right: ', response);
-        return;
-      }
-      // storeTokenInLocalStorage(response.data.token);
-      const token = response.data.token;
-      localStorage.setItem('token', token);
+    const response = await axios({
+      method: 'post',
+      url: `${api_url}/user/login`,
+      data: {
+        username,
+        password,
+      },
+    });
 
-      navigate(
-        '/dashboard'
-        // , { replace: true }
-      );
-      //
-      // setLoggedin(true);
-      //
-    } catch (err) {
-      console.log('Some error occured: ', err);
-      setError(err);
-      // setLoggedin(false);
-    } finally {
-      setLoading(false);
+    if (!response?.data?.token) {
+      console.log('Something was not right: ', response);
+      setError('Invalid login response');
+      return;
     }
-  };
+
+    const token = response.data.token;
+    localStorage.setItem('token', token);
+
+    // ✅ mark user as logged in
+    setLoggedin(true);
+
+    // ✅ optionally hydrate user if backend returns it
+    if (response.data.user) {
+      setCustomer(response.data.user);
+    }
+
+    navigate('/dashboard');
+  } catch (err) {
+    console.log('Some error occurred: ', err);
+    setError(err.response?.data?.message || 'Login failed');
+    setLoggedin(false);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   //
   const handleSubmitLogin = (e) => {

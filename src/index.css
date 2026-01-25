@@ -358,26 +358,7 @@ bottom: 'auto', */
   margin: 1rem 0;
   display: block;
 }
-/* Dropdown */
-.dropdown {
-  display: inline-block;
-  position: relative;
-}
-.dropdown-content {
-  position: absolute;
-  display: none;
-  right: 0;
-  min-width: 12rem;
-  padding: 1rem;
-  z-index: 1;
-  background-color: #203040;
-  margin: 0;
-  margin-top: 0.4rem;
-  border-radius: 0.5rem;
-}
-.dropdown:hover .dropdown-content {
-  display: block;
-}
+
 
 .select {
   width: 5rem;
@@ -388,3 +369,71 @@ bottom: 'auto', */
   margin: 0.5rem;
   font-size: 1.5rem;
 }
+
+/* Dropdown (click-based, stable) */
+.dropdown {
+  display: inline-block;
+  position: relative;
+}
+
+/* React renders/removes the menu, so DON'T hide it here */
+.dropdown-content {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  min-width: 18rem;
+  padding: 0.6rem 0;
+  z-index: 9999;
+
+  background-color: #203040;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 0.8rem;
+  margin: 0;
+  margin-top: 0.6rem;
+
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+}
+
+.dropdown-content li {
+  margin-top: 0; /* override global li margin-top: 1rem */
+}
+
+.dropdown-content a,
+.dropdown-content button {
+  display: block;
+  width: 100%;
+  padding: 0.9rem 1.2rem;
+
+  color: #ffffff;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+
+  border-radius: 0;
+}
+
+.dropdown-content a:hover,
+.dropdown-content button:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.dropdown-toggle-btn {
+  background: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+  font: inherit;
+}
+
+.dropdown-link-btn {
+  background: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+  font: inherit;
+}
+
