@@ -1,6 +1,6 @@
 ## Simazon 🛒
 
-![eCommerce website](images/cart.png)
+![eCommerce website](public/images/cart.png)
 
 **Simazon** is a full-stack e-commerce demo implementing authenticated user flows, persistent cart state, and order creation.  
 It showcases end-to-end ownership of a transactional system spanning UI, API, and persistence, with emphasis on correctness, state consistency, and extensibility.
