@@ -112,7 +112,6 @@ const SignUp = () => {
     }
   };
 
-  // handle username change
   const handleUsernameChange = (e) => {
     // console.log('------>>>>>>>>>>>>username change', e.target.value);
     const username = e.target.value;
@@ -197,7 +196,6 @@ const SignUp = () => {
   };
 
   const handleSubmitRegister = (e) => {
-    // prevent the form from refreshing the whole page
     e.preventDefault();
     signingUp(name, username, email, password);
   };
@@ -209,12 +207,10 @@ const SignUp = () => {
       </div>
       <div>{error && <Message variant="danger">Retry</Message>}</div>
       <div
-      // className="form-group"
       >
         <label htmlFor="name">Name</label>
         <input
           type="text"
-          // className="form-control"
           name="name"
           placeholder="Enter name"
           required
@@ -224,12 +220,10 @@ const SignUp = () => {
         {nameError && <div className="error">{nameError}</div>}
       </div>
       <div
-      // className="form-group"
       >
         <label htmlFor="username">Username</label>
         <input
           type="text"
-          // className="form-control"
           name="username"
           placeholder="Enter username"
           value={username}
@@ -238,12 +232,10 @@ const SignUp = () => {
         {usernameError && <div className="error">{usernameError}</div>}
       </div>
       <div
-      // className="form-group"
       >
         <label htmlFor="email">Email Address</label>
         <input
           type="email"
-          // className="form-control"
           name="email"
           placeholder="Enter Email"
           value={email}
@@ -252,12 +244,10 @@ const SignUp = () => {
         {emailError && <div className="error">{emailError}</div>}
       </div>
       <div
-      // className="form-group"
       >
         <label htmlFor="password">Password</label>
         <input
           type="password"
-          // className="form-control"
           name="password"
           placeholder="Enter Password"
           value={password}
@@ -266,12 +256,10 @@ const SignUp = () => {
         {passwordError && <div className="error">{passwordError}</div>}
       </div>
       <div
-      // className="form-group"
       >
         <label htmlFor="confirmPassword">Confirm Password</label>
         <input
           type="password"
-          // className="form-control"
           name="confirmPassword"
           placeholder="Confirm Password"
           value={confirmPassword}
@@ -284,7 +272,7 @@ const SignUp = () => {
       <div>
         <button
           type="submit"
-          className="buttoncolor" //"btn btn-lg btn-primary btn-block"
+          className="buttoncolor" 
           disabled={
             !nameValid ||
             !usernameValid ||

@@ -7,14 +7,6 @@ import {
   faTwitter,
   faInstagram,
 } from '@fortawesome/free-brands-svg-icons';
-// import {
-//   faYoutube,
-//   faFacebook,
-//   faTwitter,
-//   faInstagram,
-// } from '@fortawesome/free-solid-svg-icons';
-// import { fa-square-facebook } from "@fortawesome/free-solid-svg-icons";
-// import {  } from "@fortawesome/free-solid-svg-icons";
 import { Link } from 'react-router-dom';
 
 const launchYear = 2022;
@@ -25,122 +17,61 @@ const FooterPart = () => {
     <footer className="footer">
       <Container>
         <hr />
-        <Row
-          className="align-items-start 
-        justify-content-between 
-        "
-        >
-          <Col xs={12} md={4} className="footer-links">
-            <div>
-              <h3 className="h3footer">Pages</h3>
-              <ul className="list-unstyled">
-                <li>
-                  <Link to="/cart">Cart</Link>
-                </li>
-                <li>
-                  <Link to="/login">Login</Link>
-                </li>
-                <li>
-                  <Link to="/register">Register</Link>
-                </li>
-                {/* <li>
-                <Link to="/profile">Profile</Link>
-              </li> */}
-              </ul>
-            </div>
-          </Col>
 
-          {/* <Col md={3}>
-            <div className="footer-logo">
-              <Link to="/">
-                <img
-                  src="/images/img.png"
-                  alt="logo"
-                  style={{ width: '100px', height: '100px' }}
-                />
-              </Link>
-            </div>
-          </Col> */}
+        <Row className="justify-content-between">
           <Col xs={12} md={4} className="footer-links">
-            <div>
-              {/* <div className="footer-links"> */}
-              <h3 className="h3footer">Links</h3>
-              <ul className="list-unstyled">
-                <li>
-                  <Link to="/">Home</Link>
-                </li>
-                <li>
-                  <Link to="/products">Products</Link>
-                </li>
-                <li>
-                  <Link to="/about">About</Link>
-                </li>
-                {/* <li>
-                <Link to="/contact">Contact</Link>
-              </li> */}
-              </ul>
-              {/* </div> */}
-            </div>
+            <h3 className="h3footer">Shop</h3>
+            <ul className="list-unstyled">
+              <li><Link to="/">Home</Link></li>
+              <li><Link to="/products">Products</Link></li>
+              <li><Link to="/cart">Cart</Link></li>
+            </ul>
           </Col>
 
           <Col xs={12} md={4} className="footer-links">
-            <div>
-              <h3 className="h3footer">Get in Touch</h3>
-              <ul className="list-unstyled">
-                <li>
-                  <Link to="/contact">Contact Us</Link>
-                </li>
-                <li>
-                  <Link to="/contact">Returns</Link>
-                </li>
-                <li>
-                  <Link to="/contact">Site Map</Link>
-                </li>
-              </ul>
-              {/* </div> */}
-            </div>
+            <h3 className="h3footer">Account</h3>
+            <ul className="list-unstyled">
+              <li><Link to="/login">Login</Link></li>
+              <li><Link to="/register">Register</Link></li>
+              <li><Link to="/dashboard">Dashboard</Link></li>
+              {/* <li><Link to="/orders">Order History</Link></li> */}
+            </ul>
           </Col>
-        </Row>
-        <Row>
-          <Col className="text-center py-3">
-            <ul className="list-unstyled list-inline">
-              <li className="list-inline-item">
-                <a
-                  href="https://www.youtube.com/"
-                  className="btn-floating btn-youtube mx-1"
-                >
-                  <FontAwesomeIcon icon={faYoutube} size="lg" />
-                </a>
-              </li>
-              <li className="list-inline-item">
-                <a
-                  href="https://www.facebook.com/"
-                  className="btn-floating btn-fb mx-1"
-                >
-                  <FontAwesomeIcon icon={faFacebook} size="lg" />
-                </a>
-              </li>
-              <li className="list-inline-item">
-                <a
-                  href="https://twitter.com/"
-                  className="btn-floating btn-tw mx-1"
-                >
-                  <FontAwesomeIcon icon={faTwitter} size="lg" />
-                </a>
-              </li>
-              <li className="list-inline-item">
-                <a
-                  href="https://www.instagram.com/"
-                  className="btn-floating btn-gplus mx-1"
-                >
-                  <FontAwesomeIcon icon={faInstagram} size="lg" />
-                </a>
-              </li>
+
+          <Col xs={12} md={4} className="footer-links">
+            <h3 className="h3footer">Support</h3>
+            <ul className="list-unstyled">
+              <li><Link to="/support">Help & Support</Link></li>
+              <li><Link to="/privacy">Privacy Policy</Link></li>
             </ul>
           </Col>
         </Row>
-        <Row>
-          <Col className="text-center py-3">
+
+        <Row className="text-center py-3">
+          <Col>
+            <ul className="list-inline">
+              <li className="list-inline-item">
+                <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+                  <FontAwesomeIcon icon={faYoutube} />
+                </a>
+              </li>
+              <li className="list-inline-item">
+                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                  <FontAwesomeIcon icon={faFacebook} />
+                </a>
+              </li>
+              <li className="list-inline-item">
+                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+                  <FontAwesomeIcon icon={faTwitter} />
+                </a>
+              </li>
+              <li className="list-inline-item">
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                  <FontAwesomeIcon icon={faInstagram} />
+                </a>
+              </li>
+            </ul>
+
             <p>
               &copy; {launchYear}
               {launchYear < currentYear && ` - ${currentYear}`} simazon
@@ -155,3 +86,4 @@ const FooterPart = () => {
 };
 
 export default FooterPart;
+

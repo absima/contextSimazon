@@ -23,7 +23,6 @@ const EditProfile = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
 
-  // hydrate form from customer
   useEffect(() => {
     if (customer) {
       setName(customer.name || '');
@@ -54,7 +53,6 @@ const EditProfile = () => {
         }
       );
 
-      // backend returns updated user (without password)
       setCustomer(res.data);
       navigate('/dashboard');
     } catch (err) {

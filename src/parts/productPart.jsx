@@ -1,4 +1,3 @@
-// updating the product part to use redux
 import axios from 'axios';
 import Carousel from 'react-bootstrap/Carousel';
 import { Container } from 'react-bootstrap';
@@ -34,7 +33,6 @@ export default function ProductPart() {
   const { id } = useParams();
   const [qty, setQty] = useState(1);
 
-  // function ControlledCarousel() {
   const [index, setIndex] = useState(0);
 
   const getProduct = (id) => {
@@ -98,7 +96,6 @@ export default function ProductPart() {
                   <p>{product.description}</p>
                 </li>
               </ul>
-              {/* fhehgoheo */}
             </Col>
             <Col md={3}>
               <div className="card1 card-body">

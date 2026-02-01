@@ -13,19 +13,16 @@ export default function ProtectedRoute() {
   useEffect(() => {
     const token = localStorage.getItem('token');
 
-    // No token = definitely not logged in
     if (!token) {
       setChecking(false);
       return;
     }
 
-    // Already logged in in state = allow immediately
     if (loggedin) {
       setChecking(false);
       return;
     }
 
-    // Token exists but state isn't hydrated (refresh case) → verify token
     const hydrate = async () => {
       try {
         const res = await axios.get(`${api_url}/user/me`, {
@@ -64,17 +61,3 @@ export default function ProtectedRoute() {
 }
 
 
-// import React, { useContext } from 'react';
-// import { Navigate, Outlet, useLocation } from 'react-router-dom';
-// import { ProjContext } from '../contexter';
-
-// export default function ProtectedRoute() {
-//   const { loggedin } = useContext(ProjContext);
-//   const location = useLocation();
-
-//   if (!loggedin) {
-//     return <Navigate to="/login" replace state={{ from: location }} />;
-//   }
-
-//   return <Outlet />;
-// }

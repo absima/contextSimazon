@@ -1,4 +1,3 @@
-// src/parts/dashboard.jsx
 import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { ProjContext } from '../contexter';
@@ -61,7 +60,6 @@ const Dashboard = () => {
     if (!customer) fetchMe();
   }, [api_url, customer, navigate, setCustomer, setError, setLoading, setLoggedin]);
 
-  // Fetch recent orders (after we know user is logged in)
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) return;
@@ -86,7 +84,6 @@ const Dashboard = () => {
       }
     };
 
-    // Only fetch if customer exists (prevents unnecessary calls during hydration)
     if (customer?._id) fetchRecentOrders();
   }, [api_url, customer?._id]);
 
@@ -190,7 +187,6 @@ const Dashboard = () => {
             </div>
           </Col>
 
-          {/* Quick actions */}
           <Col md={12}>
             <div className="p-3 rounded bg-dark text-white">
               <h5 className="mb-3">Quick actions</h5>

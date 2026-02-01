@@ -46,14 +46,12 @@ export default function HeaderPart() {
     setSearchParams(value ? { filter: value } : {});
   };
 
-  // search input
   const handleFilter = (e) => {
     const value = e.target.value;
     setFilter(value);
     setSearchParams(value ? { filter: value } : {});
   };
 
-  // submit search (NO full page reload)
   const handleSubmit = (e) => {
     e.preventDefault();
     const q = (filter || '').trim();
@@ -82,7 +80,6 @@ export default function HeaderPart() {
             </div>
           </Col>
 
-          {/* ✅ Search column — preserves your original sizing/appearance */}
           <Col xs={12} md={7}>
             <div
               style={{
@@ -147,7 +144,6 @@ export default function HeaderPart() {
             </div>
           </Col>
 
-          {/* Account + Cart */}
           <Col xs={12} md={2}>
             <div className="headerdiv">
               {loggedin && customer ? (

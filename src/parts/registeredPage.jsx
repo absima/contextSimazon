@@ -1,8 +1,6 @@
-// user profile page component
 import React from 'react';
 import { Link } from 'react-router-dom';
 // import { selectUser } from '../redux/userSlice';
-// you are registered please login
 
 const RegisteredPage = () => {
   return (

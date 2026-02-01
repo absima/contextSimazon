@@ -14,9 +14,16 @@ export default function SearchPart(props) {
   const filterRaw = searchParams.get('filter');
 
   // normalize once
-  const filter = (filterRaw ?? '').toString().trim().toLowerCase();
+  const normalize = (v) =>
+    (v ?? '')
+      .toString()
+      .trim()
+      .toLowerCase()
+      // squash common category formatting differences:
+      // "skin-care" / "skin care" / "skin_care" -> "skincare"
+      .replace(/[\s_-]+/g, '');
 
-  const safeLower = (v) => (v ?? '').toString().toLowerCase();
+  const filter = normalize(filterRaw);
 
   return (
     <div className="container maindiv">
@@ -30,13 +37,13 @@ export default function SearchPart(props) {
             .filter((product) => {
               if (!filter) return true;
 
-              const title = safeLower(product?.title);
-              const brand = safeLower(product?.brand);
-              const category = safeLower(product?.category);
+              const title = normalize(product?.title);
+              const brand = normalize(product?.brand);
+              const category = normalize(product?.category);
 
               // optional: support tags in the new DummyJSON dataset
               const tags = Array.isArray(product?.tags)
-                ? product.tags.join(' ').toLowerCase()
+                ? normalize(product.tags.join(' '))
                 : '';
 
               return (

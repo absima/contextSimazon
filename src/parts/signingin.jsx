@@ -125,10 +125,8 @@ const SignIn = () => {
     const token = response.data.token;
     localStorage.setItem('token', token);
 
-    // ✅ mark user as logged in
     setLoggedin(true);
 
-    // ✅ optionally hydrate user if backend returns it
     if (response.data.user) {
       setCustomer(response.data.user);
     }
@@ -160,7 +158,6 @@ const SignIn = () => {
         <label htmlFor="username">Username</label>
         <input
           type="text"
-          // className="form-control"
           name="username"
           placeholder="Enter username"
           value={username}
@@ -172,7 +169,6 @@ const SignIn = () => {
         <label htmlFor="password">Password</label>
         <input
           type="password"
-          // className="form-control"
           name="password"
           placeholder="Enter Password"
           value={password}
@@ -191,7 +187,6 @@ const SignIn = () => {
         </button>
       </div>
       {error && <div className="error">Error logging in</div>}
-      {/* {loggedin && <div className="success">Login successful</div>} */}
       <div>
         <label />
         <div>
