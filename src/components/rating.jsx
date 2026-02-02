@@ -1,69 +1,36 @@
-import React from 'react';
+// import React from 'react';
 
-export default function Rating(props) {
-  const { rating, numReviews } = props;
+function StarIcon({ variant }) {
+  const cls =
+    variant === 'full'
+      ? 'fa fa-star'
+      : variant === 'half'
+      ? 'fa fa-star-half-o'
+      : 'fa fa-star-o';
+
+  return <i className={cls} aria-hidden="true" />;
+}
+
+export default function Rating({ rating = 0, numReviews = 0 }) {
+  const stars = [1, 2, 3, 4, 5].map((n) => {
+    if (rating >= n) return 'full';
+    if (rating >= n - 0.5) return 'half';
+    return 'empty';
+  });
+
   return (
-    <div className="rating">
-      <span>
-        <i
-          className={
-            rating >= 1
-              ? 'fa fa-star'
-              : rating >= 0.5
-              ? 'fa fa-star-half-o'
-              : 'fa fa-star-o'
-          }
-        ></i>
+    <div className="ratingRow" aria-label={`Rating ${rating} out of 5`}>
+      <div className="ratingStars">
+        {stars.map((v, idx) => (
+          <span className={`star ${v}`} key={idx}>
+            <StarIcon variant={v} />
+          </span>
+        ))}
+      </div>
+
+      <span className="ratingMeta">
+        {numReviews} <span className="ratingMetaText">reviews</span>
       </span>
-      <span>
-        <i
-          className={
-            rating >= 2
-              ? 'fa fa-star'
-              : rating >= 1.5
-              ? 'fa fa-star-half-o'
-              : 'fa fa-star-o'
-          }
-        ></i>
-      </span>
-      <span>
-        <i
-          className={
-            rating >= 3
-              ? 'fa fa-star'
-              : rating >= 2.5
-              ? 'fa fa-star-half-o'
-              : 'fa fa-star-o'
-          }
-        ></i>
-      </span>
-      <span>
-        <i
-          className={
-            rating >= 4
-              ? 'fa fa-star'
-              : rating >= 3.5
-              ? 'fa fa-star-half-o'
-              : 'fa fa-star-o'
-          }
-        ></i>
-      </span>
-      <span>
-        <i
-          className={
-            rating >= 5
-              ? 'fa fa-star'
-              : rating >= 4.5
-              ? 'fa fa-star-half-o'
-              : 'fa fa-star-o'
-          }
-        ></i>
-      </span>
-      <span 
-      style={{
-        color: '#a4a4a4'}
-      }
-      > {numReviews + ' reviews'}</span>
     </div>
   );
 }

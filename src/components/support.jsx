@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+// import React from 'react';
+import { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import Message from './message';
 
@@ -11,7 +12,6 @@ export default function Support() {
   const submitHandler = (e) => {
     e.preventDefault();
 
-    // For now: just simulate success
     setSubmitted(true);
     setEmail('');
     setSubject('');

@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -179,7 +179,7 @@ const SignIn = () => {
       <div>
         <button
           type="submit"
-          className="buttoncolor" //"btn btn-lg btn-primary btn-block"
+          className="buttoncolor" 
           disabled={!usernameValid || !passwordValid}
         >
           {loading && <i className="fa fa-refresh fa-spin"></i>}

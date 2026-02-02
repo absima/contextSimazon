@@ -1,8 +1,5 @@
-import React from 'react';
+// import React from 'react';
 
-// @connect(state => ({
-//   loading: state.loading
-// }))
 
 export default function LoadingIndicator() {
   return (

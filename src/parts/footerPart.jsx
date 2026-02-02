@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -74,7 +74,7 @@ const FooterPart = () => {
 
             <p>
               &copy; {launchYear}
-              {launchYear < currentYear && ` - ${currentYear}`} simazon
+              {` `} Simachew
             </p>
           </Col>
         </Row>

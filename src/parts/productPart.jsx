@@ -1,4 +1,4 @@
-import axios from 'axios';
+// import axios from 'axios';
 import Carousel from 'react-bootstrap/Carousel';
 import { Container } from 'react-bootstrap';
 import Row from 'react-bootstrap/Row';
@@ -50,15 +50,20 @@ export default function ProductPart() {
     setIndex(selectedIndex);
   };
 
+  // return (
+  //   <div className="container maindiv">
   return (
-    <div className="container maindiv">
+  <div className="container maindiv">
+    <div className="product-page">
+
       {loading ? (
         <LoadingIndicator></LoadingIndicator>
       ) : error ? (
         <Message variant="danger">{error}</Message>
       ) : Object.keys(product).length > 0 ? (
         <Container>
-          <Link className="btn btn-light my-3" to="/products">
+          {/* <Link className="btn btn-light my-3" to="/products"> */}
+          <Link className="btn btn-light my-3 product-backbtn" to="/products">
             <button>
               <i className="fa fa-arrow-left"></i> &nbsp; Go Back
             </button>
@@ -78,8 +83,9 @@ export default function ProductPart() {
                 ))}
               </Carousel>
             </Col>
-            <Col md={3}>
+            {/* <Col md={3}> */}
               {/* jeighihge */}
+            <Col md={3} className="product-info">
               <ul>
                 <li>
                   <h1>{product.title}</h1>
@@ -97,8 +103,11 @@ export default function ProductPart() {
                 </li>
               </ul>
             </Col>
-            <Col md={3}>
-              <div className="card1 card-body">
+            {/* <Col md={3}>
+              <div className="card1 card-body"> */}
+            <Col md={3} className="product-buybox">
+              <div>
+
                 <ul>
                   <li>
                     <div className="liprodiv">
@@ -159,6 +168,7 @@ export default function ProductPart() {
       ) : (
         ''
       )}
+    </div>
     </div>
   );
 }

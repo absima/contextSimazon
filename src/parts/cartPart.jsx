@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useParams, useLocation, Link, useNavigate } from 'react-router-dom';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
 import Message from '../components/message';
 import { Container, Row, Col, ListGroup, Image, Form } from 'react-bootstrap';
 
@@ -22,13 +22,11 @@ export default function CartPart() {
     quant = qtyInUrl ? Number(qtyInUrl) : 1;
   }
 
-  // update badge count
   useEffect(() => {
     setCartItems(cart.length > 0 ? cart.reduce((a, item) => a + item.quantity, 0) : 0);
   }, [cart, setCartItems]);
 
   const checkoutHandler = () => {
-    // If not logged in, send to login with redirect back to checkout
     if (!loggedin || !localStorage.getItem('token')) {
       navigate('/login?redirect=/checkout');
       return;

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useContext } from 'react';
+import { useEffect, useRef, useState, useContext } from 'react';
 import { Container, Row, Col, Form } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
@@ -13,10 +13,9 @@ export default function HeaderPart() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Keep search field synced with URL if you refresh on /search?filter=...
   const [filter, setFilter] = useState(searchParams.get('filter') || '');
+  const [category, setCategory] = useState('');
 
-  // ✅ stable dropdown (click open/close + click outside closes)
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
@@ -30,7 +29,6 @@ export default function HeaderPart() {
     return () => document.removeEventListener('mousedown', onClickOutside);
   }, []);
 
-  // logout
   const handleLogout = () => {
     localStorage.removeItem('token');
     setCustomer(null);
@@ -39,23 +37,33 @@ export default function HeaderPart() {
     navigate('/login');
   };
 
-  // category select
   const handleSelect = (e) => {
     const value = e.target.value;
-    setFilter(value);
-    setSearchParams(value ? { filter: value } : {});
+    setCategory(value);
+    setMenuOpen(false);
+
+    if (!value) {
+      setFilter('');
+      setSearchParams({});
+      navigate('/search');
+      return;
+    }
+
+    setFilter('');
+    setSearchParams({ filter: value });
+    navigate(`/search?filter=${encodeURIComponent(value)}`);
   };
 
   const handleFilter = (e) => {
     const value = e.target.value;
     setFilter(value);
+    setCategory('');
     setSearchParams(value ? { filter: value } : {});
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const q = (filter || '').trim();
-
     setMenuOpen(false);
 
     if (q) {
@@ -70,82 +78,14 @@ export default function HeaderPart() {
   return (
     <header>
       <Container>
-        <Row>
-          {/* Brand */}
-          <Col xs={12} md={2}>
-            <div>
-              <Link className="brand" to="/">
-                simazon
-              </Link>
-            </div>
-          </Col>
+        <Row className="headerRow">
 
-          <Col xs={12} md={7}>
-            <div
-              style={{
-                width: '100%',
-                height: '5rem',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}
-            >
-              <select
-                style={{
-                  width: '10%',
-                  height: '100%',
-                  minWidth: '7rem',
-                }}
-                name="category"
-                value="" // keep your previous behavior
-                onChange={handleSelect}
-              >
-                <option value=""> all </option>
-                <option value="smartphones">Smartphones</option>
-                <option value="laptops">Laptops</option>
-                <option value="fragrances">Fragrances</option>
-                <option value="skincare">Skin Care</option>
-                <option value="groceries">Groceries</option>
-                <option value="home-decoration">Decos</option>
-              </select>
+          <Col xs={12} className="headerTop">
+            <Link className="brand" to="/">
+              simazon
+            </Link>
 
-              <Form
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  display: 'flex',
-                }}
-                onSubmit={handleSubmit}
-              >
-                <input
-                  style={{
-                    width: '82%',
-                    height: '100%',
-                  }}
-                  name="search"
-                  type="text"
-                  placeholder="Search..."
-                  value={filter}
-                  onChange={handleFilter}
-                />
-
-                <button
-                  type="submit"
-                  style={{
-                    width: '8%',
-                    height: '100%',
-                    minWidth: '5rem',
-                    color: 'gray',
-                  }}
-                >
-                  <i className="fa fa-search"></i>
-                </button>
-              </Form>
-            </div>
-          </Col>
-
-          <Col xs={12} md={2}>
-            <div className="headerdiv">
+            <div className="headerActions">
               {loggedin && customer ? (
                 <div className="dropdown" ref={menuRef}>
                   <button
@@ -159,10 +99,7 @@ export default function HeaderPart() {
                   {menuOpen && (
                     <ul className="dropdown-content">
                       <li>
-                        <Link
-                          to="/dashboard"
-                          onClick={() => setMenuOpen(false)}
-                        >
+                        <Link to="/dashboard" onClick={() => setMenuOpen(false)}>
                           Dashboard
                         </Link>
                       </li>
@@ -195,10 +132,50 @@ export default function HeaderPart() {
                 <Link to="/login">Log in</Link>
               )}
 
-              <Link to="/cart">
-                &nbsp; <FontAwesomeIcon icon={faCartShopping} size="lg" />
+              <Link to="/cart" className="cartLink">
+                <FontAwesomeIcon icon={faCartShopping} size="lg" />
                 {cartItems > 0 && <span className="notif">{cartItems}</span>}
               </Link>
+            </div>
+          </Col>
+
+          <Col xs={12}>
+            <div className="headerSearch">
+              <select
+                className="header-select"
+                name="category"
+                value={category}
+                onChange={handleSelect}
+              >
+                <option value="" disabled>
+                  select
+                </option>
+                <option value="smartphones">Smartphones</option>
+                <option value="laptops">Laptops</option>
+                <option value="fragrances">Fragrances</option>
+                <option value="skincare">Skin Care</option>
+                <option value="groceries">Groceries</option>
+                <option value="home-decoration">Decos</option>
+              </select>
+
+              <Form className="header-form" onSubmit={handleSubmit}>
+                <input
+                  className="header-input"
+                  name="search"
+                  type="text"
+                  placeholder="Search..."
+                  value={filter}
+                  onChange={handleFilter}
+                />
+
+                <button
+                  type="submit"
+                  className="header-submit"
+                  aria-label="Search"
+                >
+                  <i className="fa fa-search"></i>
+                </button>
+              </Form>
             </div>
           </Col>
         </Row>
@@ -208,4 +185,3 @@ export default function HeaderPart() {
     </header>
   );
 }
-

@@ -13,13 +13,12 @@ export default function SearchPart(props) {
   const [searchParams] = useSearchParams();
   const filterRaw = searchParams.get('filter');
 
-  // normalize once
   const normalize = (v) =>
     (v ?? '')
       .toString()
       .trim()
       .toLowerCase()
-      // squash common category formatting differences:
+      // common category formatting differences:
       // "skin-care" / "skin care" / "skin_care" -> "skincare"
       .replace(/[\s_-]+/g, '');
 
@@ -32,7 +31,7 @@ export default function SearchPart(props) {
       ) : error ? (
         <Message variant="danger">{error}</Message>
       ) : (
-        <Row>
+        <Row className="product-grid">
           {(products ?? [])
             .filter((product) => {
               if (!filter) return true;
@@ -41,7 +40,6 @@ export default function SearchPart(props) {
               const brand = normalize(product?.brand);
               const category = normalize(product?.category);
 
-              // optional: support tags in the new DummyJSON dataset
               const tags = Array.isArray(product?.tags)
                 ? normalize(product.tags.join(' '))
                 : '';

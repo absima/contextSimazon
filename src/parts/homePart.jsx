@@ -1,5 +1,5 @@
-import { useContext, useEffect } from 'react';
-import axios from 'axios';
+import { useContext} from 'react';
+// import axios from 'axios';
 import { Col, Container, Row } from 'react-bootstrap';
 
 import Product from '../components/product';
@@ -10,13 +10,13 @@ import { ProjContext } from '../contexter';
 
 export default function HomePart(props) {
   const {
-    api_url,
+    // api_url,
     products,
-    setProducts,
+    // setProducts,
     loading,
-    setLoading,
+    // setLoading,
     error,
-    setError,
+    // setError,
     // cart,
     // setCart,
   } = useContext(ProjContext);
@@ -26,24 +26,25 @@ export default function HomePart(props) {
 
   return (
     <Container>
-      <Row>
-        <Col>
-          <h1>Latest Products</h1>
-        </Col>
-      </Row>
-      <Row>
-        {loading ? (
-          <LoadingIndicator />
-        ) : error ? (
-          <Message variant="danger">{error}</Message>
-        ) : (
-          products.map((product) => (
-            <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
-              <Product product={product} />
-            </Col>
-          ))
-        )}
-      </Row>
+      {/* <Row> */}
+<Row className="mb-2">
+  <Col>
+    <h1>Latest Products</h1>
+  </Col>
+</Row>
+
+<Row className="product-grid g-3 g-md-4">
+  {loading ? (
+    <LoadingIndicator />
+  ) : error ? (
+    <Message variant="danger">{error}</Message>
+  ) : (
+    (products ?? []).map((product) => (
+      <Product key={product._id} product={product} />
+    ))
+  )}
+</Row>
+
     </Container>
   );
 }
