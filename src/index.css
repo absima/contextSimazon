@@ -1,5 +1,5 @@
 :root {
-  --bg: #c8cedc;
+  --bg: #203040;
   --header-bg: #203040;
 
   --surface: #ffffff;
@@ -1004,7 +1004,7 @@ h2 {
 }
 
 .ratingMeta {
-  font-size: 1.rem;
+  /* font-size: 1.rem; */
   margin-top: 2px;             /* tiny optical separation */
   white-space: nowrap;
 }
