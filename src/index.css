@@ -1008,3 +1008,7 @@ h2 {
   margin-top: 2px;             /* tiny optical separation */
   white-space: nowrap;
 }
+
+.text-muted{
+  color: #e5e7eb;
+}
