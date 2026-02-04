@@ -991,3 +991,20 @@ h2 {
   --surface: #eff2f3ee;
   --border: #e5e7eb;
 }
+
+.rating {
+  display: inline-flex;        /* shrink to stars width */
+  flex-direction: column;
+  align-items: flex-start;     /* align meta to stars, not card */
+  line-height: 1;              /* remove extra vertical breathing */
+}
+
+.ratingStars {
+  display: inline-flex;
+}
+
+.ratingMeta {
+  font-size: 1.rem;
+  margin-top: 2px;             /* tiny optical separation */
+  white-space: nowrap;
+}

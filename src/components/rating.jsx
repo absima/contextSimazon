@@ -19,7 +19,7 @@ export default function Rating({ rating = 0, numReviews = 0 }) {
   });
 
   return (
-    <div className="ratingRow" aria-label={`Rating ${rating} out of 5`}>
+    <div className="rating">
       <div className="ratingStars">
         {stars.map((v, idx) => (
           <span className={`star ${v}`} key={idx}>
@@ -28,9 +28,10 @@ export default function Rating({ rating = 0, numReviews = 0 }) {
         ))}
       </div>
 
-      <span className="ratingMeta">
-        {numReviews} <span className="ratingMetaText">reviews</span>
-      </span>
+      <div className="ratingMeta">
+        {numReviews}{' '}
+        <span className="ratingMetaText">reviews</span>
+      </div>
     </div>
   );
 }
